@@ -2,12 +2,8 @@
 
 # og python libs
 from typing import List, Dict, Any, Tuple, Pattern
-import time
 import re
 import os
-import pprint
-import itertools
-import sys
 
 # classic DS libs
 import pandas as pd
@@ -15,32 +11,18 @@ import numpy as np
 
 # viz libs
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mtick
-import seaborn as sns
-from ipywidgets import interact, interactive, fixed, interact_manual
-import ipywidgets as widgets
-
-# scipy
-from scipy.integrate import quad
-from scipy.signal import find_peaks, peak_widths, find_peaks_cwt
-from scipy.special import voigt_profile
-from scipy.optimize import curve_fit
-from scipy.constants import k as k_B, c, N_A
 
 # lmfit things
-from lmfit.models import LinearModel, GaussianModel, VoigtModel, SplineModel, ExponentialModel, ExpressionModel, Model, ConstantModel
-from lmfit import Parameter, Parameters
-from lmfit import minimize, minimizer
+from lmfit.models import SplineModel
 
 # ML
 from sklearn.linear_model import LinearRegression
 
 # GenAI
 from google import genai
-from google.genai import types
+# from google.genai import types
 
 # natural data databases
-import hapi
 from my_utils.common import std_range
 
 # API setups
@@ -59,27 +41,6 @@ col_names = {
     7: 'RH',            # humidity sensor (external)
     8: 'Pressure'       # sensor (external)
 }
-
-
-def std_range(df: pd.DataFrame, y: str, coef: int | float = 1) -> Tuple[pd.Series, float, pd.Series]:
-    """
-    Filters data. Creates new stddev for some filtered data based on the IQR from 0.25 quantile to 0.75 quantile.
-
-    Args:
-        df (pd.DataFrame): pandas dataframe to work on
-        y (str): column name of the column of interest
-        coef (int | float): larger number makes filtering weaker (default=1)
-
-    Returns:
-        (Tuple[pd.DataFrame, float, pd.DataFrame]): new data frame, new stddev, outliers
-    """
-    Q1 = df[y].quantile(0.25)
-    Q3 = df[y].quantile(0.75)
-    IQR = Q3 - Q1
-    new_df = df[(df[y] > Q1-coef*IQR) & (df[y] < Q3+coef*IQR)]
-    outliers = df[(df[y] < Q1-coef*IQR) & (df[y] > Q3+coef*IQR)]
-    new_std = new_df[y].std()
-    return new_df, new_std, outliers
 
 
 # ---------------------------- CLASSES -------------------------------
@@ -357,10 +318,12 @@ class CEPAS_benchmark():
 
         Args:
             path (str): path to the benchmark spectral measurements
-            spectra_names (Dict[int | str | float, Dict[int | str | float, List[str]]]): special dictionary that stores the filenames of the spectra
+            spectra_names (Dict[int | str | float, Dict[int | str | float, List[str]]]): \
+                special dictionary that stores the filenames of the spectra
             pressure (int|str|float): pressure to look at
             frequency (int|str|float): frequency to look at
-            noise_flag (bool): take care of the triplets that are not the same in length (align x axis)
+            noise_flag (bool): take care of the triplets that are \
+                not the same in length (align x axis)
 
         Returns:
             None: but initializes the class
@@ -377,19 +340,40 @@ class CEPAS_benchmark():
 
         # workaround for uneven spectra
         if not self.noise_flag:
-            neq_12 = len(self.spectra.spectra_list[0]) != len(self.spectra.spectra_list[1])
-            neq_23 = len(self.spectra.spectra_list[1]) != len(self.spectra.spectra_list[2])
-            # neq_13 = len(self.spectra.spectra_list[2]) != len(self.spectra.spectra_list[0])
+            neq_12 = len(self.spectra.spectra_list[0]) != \
+                len(self.spectra.spectra_list[1])
+            neq_23 = len(self.spectra.spectra_list[1]) != \
+                len(self.spectra.spectra_list[2])
+            # neq_13 = len(self.spectra.spectra_list[2]) != \
+            # len(self.spectra.spectra_list[0])
 
             if neq_12:
-                self.spectra.replace(1, self.spectra.spectra_list[1].iloc[1:].reset_index(drop=True))
-                self.spectra.replace(2, self.spectra.spectra_list[2].iloc[1:].reset_index(drop=True))
-                self.spectra.replace(0, self.spectra.spectra_list[0].reset_index(drop=True))
+                self.spectra.replace(
+                    1,
+                    self.spectra.spectra_list[1].iloc[1:].reset_index(
+                        drop=True))
+                self.spectra.replace(
+                    2,
+                    self.spectra.spectra_list[2].iloc[1:].reset_index(
+                        drop=True))
+                self.spectra.replace(
+                    0,
+                    self.spectra.spectra_list[0].reset_index(
+                        drop=True))
 
             if neq_23:
-                self.spectra.replace(0, self.spectra.spectra_list[0].iloc[1:].reset_index(drop=True))
-                self.spectra.replace(1, self.spectra.spectra_list[1].iloc[1:].reset_index(drop=True))
-                self.spectra.replace(2, self.spectra.spectra_list[2].reset_index(drop=True))
+                self.spectra.replace(
+                    0,
+                    self.spectra.spectra_list[0].iloc[1:].reset_index(
+                        drop=True))
+                self.spectra.replace(
+                    1,
+                    self.spectra.spectra_list[1].iloc[1:].reset_index(
+                        drop=True))
+                self.spectra.replace(
+                    2,
+                    self.spectra.spectra_list[2].reset_index(
+                        drop=True))
 
             # print(self.spectra.spectra_list)
 
@@ -399,20 +383,30 @@ class CEPAS_benchmark():
         """
         return self.spectra.avg()
 
-    def add_wav(self, units1: List[float | int], units2: List[float | int]) -> None:
+    def add_wav(self,
+                units1: List[float | int],
+                units2: List[float | int]) -> None:
         """
-        Adds wavenumber axis, based on the `CEPAS_measurement.get_wavenumber()`.
-        Does a linear regression of two units to determine the conversion factors.
+        Adds wavenumber axis, based on the \
+            `CEPAS_measurement.get_wavenumber()`.
+        Does a linear regression of two units \
+            to determine the conversion factors.
 
         Args:
-            units1 (List[float | int]): unit converted from (in this application usually `offset1`)
-            units2 (List[float | int]): unit to convert to (here usually wavenumbers)
+            units1 (List[float | int]): unit converted from \
+                (in this application usually `offset1`)
+            units2 (List[float | int]): unit to convert to \
+                (here usually wavenumbers)
 
         Returns:
             None
         """
         for s in self.spectra.spectra_list:
-            s['wavenumbers'] = self.spectra.get_wavenumber(s['offset1'], units1, units2)[0]
+            s['wavenumbers'] = self.spectra.get_wavenumber(
+                s['offset1'],
+                units1,
+                units2
+                )[0]
 
     def self_test(self) -> None:
         """
@@ -429,7 +423,10 @@ class CEPAS_benchmark():
         """
         print(test_string)
 
-    def get_window(self, start: int | float=1625, end: int | float=1750, col: str='offset1') -> List[pd.DataFrame]:
+    def get_window(self,
+                   start: int | float = 1625,
+                   end: int | float = 1750,
+                   col: str = 'offset1') -> List[pd.DataFrame]:
         """
         Gets the region of the spectrum.
 
@@ -439,28 +436,49 @@ class CEPAS_benchmark():
             col (str): column which contains the values of start and end
 
         Returns:
-            List[pd.DataFrame]: Tha last one is the average of all the previous ones
+            List[pd.DataFrame]: Tha last one is the average \
+                of all the previous ones
         """
         frames = self.spectra.spectra_list + [self.get_avg()]
         cut_frames = [f[(f[col] > start) & (f[col] < end)] for f in frames]
 
         return cut_frames
 
-    def get_spline_of_window(self, n_spectrum: int=-1, n_knots: int=10, start: int | float=1625, end: int | float=1750, colx: str='offset1', coly: str='H2_pnorm', n_dense: int=100) -> Tuple[pd.DataFrame, str, pd.DataFrame, pd.DataFrame, float]:
+    def get_spline_of_window(self,
+                             n_spectrum: int = -1,
+                             n_knots: int = 10,
+                             start: int | float = 1625,
+                             end: int | float = 1750,
+                             colx: str = 'offset1',
+                             coly: str = 'H2_pnorm',
+                             n_dense: int = 100) -> Tuple[
+                                 pd.DataFrame,
+                                 str,
+                                 pd.DataFrame,
+                                 pd.DataFrame,
+                                 float
+                                 ]:
         """
         Does the `lmfit.SplineModel` on defined range of data
 
         Args:
-            n_spectrum (int): Which spectrum from the benchmark to analyse. Defaults to -1, which is the average of all measurements
+            n_spectrum (int): Which spectrum from the benchmark to analyse. \
+                Defaults to -1, which is the average of all measurements
             n_knots (int): number of knots used in `lmfit.SplineModel()`
             start (int | float): Start of the window of interest
             end (int | float): End of the window of interest
             colx (str): Which column to use for x-axis, default is `'offset1'`
             coly (str): Which column to use for y-axis, default is `'H2_pnorm'`
-            n_dense (int): How many points to use in the evaluation of the spline, using the x-axis of arbitrary density, to get more accurate max value
+            n_dense (int): How many points to use in the \
+                evaluation of the spline, \
+                    using the x-axis of arbitrary \
+                        density, to get more accurate max value
 
         Returns:
-            (Tuple[pd.DataFrame, str, pd.DataFrame, pd.DataFrame, float]): best fit, fit report, dense evaluation and row of dense evaluation at `coly=coly.max()`, finally a max of coly float itself
+            (Tuple[pd.DataFrame, str, pd.DataFrame, pd.DataFrame, float]): \
+                best fit, fit report, dense evaluation and row of \
+                    dense evaluation at `coly=coly.max()`, \
+                        finally a max of coly float itself
         """
 
         buffer = 0.01
@@ -484,27 +502,46 @@ class CEPAS_benchmark():
                 coly: result.eval(x=x_dense)
             }
         )
-        peak_height = result_dense[result_dense[coly] == result_dense[coly].max()]
+        peak_height = result_dense[result_dense[coly] ==
+                                   result_dense[coly].max()]
 
-        return result_df, result.fit_report(), result_dense, peak_height, peak_height[coly]
+        return result_df, result.fit_report(), result_dense, peak_height, \
+            peak_height[coly]
 
 
 class CEPAS_noise_info():
 
-    def __init__(self, path: str, pressure: int | str | float, n: int | None=None):
+    def __init__(self,
+                 path: str,
+                 pressure: int | str | float,
+                 n: int | None = None):
         if n is not None:
-            self.spectrum = pd.read_csv(f"{path}Spectrum{pressure}_{n}.txt", sep=r'\s+', header=None, names=['freq', 'intensity'])
+            self.spectrum = pd.read_csv(
+                f"{path}Spectrum{pressure}_{n}.txt",
+                sep=r'\s+',
+                header=None,
+                names=['freq',
+                       'intensity'])
         else:
-            self.spectrum = pd.read_csv(f"{path}Spectrum{pressure}.txt", sep=r'\s+', header=None, names=['freq', 'intensity'])
+            self.spectrum = pd.read_csv(
+                f"{path}Spectrum{pressure}.txt",
+                sep=r'\s+',
+                header=None,
+                names=['freq',
+                       'intensity'])
 
-    def get_noise_at(self, frequency: int | str | float, buffer: int | float=2) -> float:
+    def get_noise_at(self,
+                     frequency: int | str | float,
+                     buffer: int | float = 2) -> float:
         """
         Get the system background at the specified frequency.
         Pressure is set upon making initiating the object.
 
         Args:
-            frequency (int | str | float): At what frequency you want to get system background signal? 
-            buffer (int | float): What should be the averaging range (+/- buffer)
+            frequency (int | str | float): At what frequency you want to get \
+                system background signal?
+            buffer (int | float): What should \
+                be the averaging range (+/- buffer)
             m (int | None): What should be the
 
         Returns:
@@ -514,17 +551,29 @@ class CEPAS_noise_info():
         try:
             frequency = float(frequency)
         except Exception:
-            raise ValueError(f"Frequency must be convertible to float, got {frequency} of type {type(frequency)}")
+            raise ValueError(
+                f"Frequency must be convertible to float, \
+                    got {frequency} of type {type(frequency)}")
 
         start = frequency - buffer
         end = frequency + buffer
         df = self.spectrum
-        return df[(df['freq'] > start) & (df['freq'] < end)]['intensity'].mean()
+        return df[
+            (df['freq'] > start) & (df['freq'] < end)
+            ]['intensity'].mean()
 
 
 class CEPAS_SNR_bench():
 
-    def __init__(self, snr_dict: Dict[int | str | float, Dict[int | str | float, List[str]]], bench_path: str = "", noise_path: str = "", noise_number: None | int = None):
+    def __init__(self,
+                 snr_dict: Dict[
+                     int | str | float,
+                     Dict[
+                         int | str | float,
+                         List[str]]],
+                 bench_path: str = "",
+                 noise_path: str = "",
+                 noise_number: None | int = None):
         self.snr_dict = snr_dict
         self.bench_path = bench_path
         self.bench_files = snr_dict
@@ -543,25 +592,53 @@ class CEPAS_SNR_bench():
         """
         self.bench_path = path
 
-    def make_bench(self, pressure: int | str | float, frequency: int | str | float):
+    def make_bench(self,
+                   pressure: int | str | float,
+                   frequency: int | str | float):
         """
         Create a `CEPAS_benchmark` object for the chemical spectra
         """
         if self.bench_path == "":
-            raise ValueError("Please create a bench path using 'object.set_bench_path(path)'")
-        bench_test = CEPAS_benchmark(self.bench_path, self.bench_files, pressure, frequency) 
+            raise ValueError("Please \
+                             create a bench path using \
+                             'object.set_bench_path(path)'")
+        bench_test = CEPAS_benchmark(
+            self.bench_path,
+            self.bench_files,
+            pressure, frequency
+            )
         return bench_test
 
-    def make_noise_bench(self, pressure: int | str | float, frequency: int | str | float) -> CEPAS_benchmark:
+    def make_noise_bench(self,
+                         pressure: int | str | float,
+                         frequency: int | str | float) -> CEPAS_benchmark:
         """
         Create a `CEPAS_benchmark` object for the noise of single points
         """
         if self.noise_path == "":
-            raise ValueError("Please create a noise path using 'object.set_noise_path(path)'")
-        bench_noise = CEPAS_benchmark(self.noise_path, self.bench_files, pressure, frequency, noise_flag=True) 
+            raise ValueError(
+                "Please create a noise \
+                    path using 'object.set_noise_path(path)'")
+        bench_noise = CEPAS_benchmark(
+            self.noise_path,
+            self.bench_files,
+            pressure,
+            frequency,
+            noise_flag=True
+            )
         return bench_noise
 
-    def get_signal(self, start: int | float, end: int | float, pressure: int | str | float, frequency: int | str | float)-> Tuple[pd.DataFrame, str, pd.DataFrame, pd.DataFrame, float]:
+    def get_signal(self,
+                   start: int | float,
+                   end: int | float,
+                   pressure: int | str | float,
+                   frequency: int | str | float) -> Tuple[
+                       pd.DataFrame,
+                       str,
+                       pd.DataFrame,
+                       pd.DataFrame,
+                       float
+                       ]:
         """
         Returns the chosen signal peak in spectral region `start` to `end`.
 
@@ -574,16 +651,30 @@ class CEPAS_SNR_bench():
         bench = self.make_bench(pressure, frequency)
         peak_start = start
         peak_end = end
-        peak_spline = bench.get_spline_of_window(n_spectrum=-1, n_knots=11, start=peak_start, end=peak_end)
+        peak_spline = bench.get_spline_of_window(
+            n_spectrum=-1,
+            n_knots=11,
+            start=peak_start,
+            end=peak_end
+            )
         return peak_spline
 
-    def get_horizontal_noise(self, start: int | float, end: int | float, pressure: int | str | float, frequency: int | str | float, wstart: int | float=1687.5, wend: int | float=1707.5):
+    def get_horizontal_noise(self,
+                             start: int | float,
+                             end: int | float,
+                             pressure: int | str | float,
+                             frequency: int | str | float,
+                             wstart: int | float = 1687.5,
+                             wend: int | float = 1707.5):
         """
         Get the horizontal noise at some window
         """
         bench = self.make_bench(pressure, frequency)
         flat_regions = bench.get_window(start=start, end=end)
-        spline_of_avg = bench.get_spline_of_window(n_knots=10, start=start, end=end)
+        spline_of_avg = bench.get_spline_of_window(
+            n_knots=10,
+            start=start,
+            end=end)
         flat_regions_dict = {
             '0': flat_regions[0],
             '1': flat_regions[1],
@@ -595,53 +686,88 @@ class CEPAS_SNR_bench():
         stdevs_horizontal = []
         for k in flat_regions_dict.keys():
             df = flat_regions_dict[k]
-            flat_regions_dict[k] = df[(df['offset1'] > wstart) & (df['offset1'] < wend)]
+            flat_regions_dict[k] = df[
+                (df['offset1'] > wstart) & (df['offset1'] < wend)]
             df = flat_regions_dict[k]
             stdevs_horizontal.append(df['H2_pnorm'].std(ddof=0))
 
-        all_horizontal_noises = [np.format_float_scientific(i, precision=3) for i in stdevs_horizontal]
-        horizontal_mean = np.mean(np.array(stdevs_horizontal[0:3]))       
+        all_horizontal_noises = [
+            np.format_float_scientific(
+                i,
+                precision=3
+                ) for i in stdevs_horizontal]
+        horizontal_mean = np.mean(np.array(stdevs_horizontal[0:3]))
         return all_horizontal_noises, horizontal_mean
 
-    def get_vertical_noise(self, start: int | float, end: int | float, pressure: int | str | float, frequency: int | str | float, wstart: int | float=1687.5, wend: int | float=1707.5) -> Tuple[List[str] | List[float], float | np.floating[Any]]:
+    def get_vertical_noise(self,
+                           start: int | float,
+                           end: int | float,
+                           pressure: int | str | float,
+                           frequency: int | str | float,
+                           wstart: int | float = 1687.5,
+                           wend: int | float = 1707.5) -> Tuple[
+                               List[str] | List[float],
+                               float | np.floating[Any]
+                               ]:
         """
         Get the vertical noise at some predefined window
         """
         bench = self.make_bench(pressure, frequency)
         flat_regions = bench.get_window(start=start, end=end)
-        spline_of_avg = bench.get_spline_of_window(n_knots=10, start=start, end=end)
+        spline_of_avg = bench.get_spline_of_window(
+            n_knots=10,
+            start=start,
+            end=end
+            )
         flat_regions_dict = {
             '0': flat_regions[0],
             '1': flat_regions[1],
             '2': flat_regions[2],
             'avg': flat_regions[3],
             'avg_spline': spline_of_avg[0]
-        }       
+        }
 
         for k in flat_regions_dict.keys():
             df = flat_regions_dict[k]
-            flat_regions_dict[k] = df[(df['offset1'] > wstart) & (df['offset1'] < wend)]
+            flat_regions_dict[k] = df[
+                (df['offset1'] > wstart) & (df['offset1'] < wend)
+                ]
 
         stdevs_vertical = []
-        df_std = pd.DataFrame({k: v.reset_index()['H2_pnorm'] for k, v in flat_regions_dict.items()})
-        df_std = df_std.loc[:,'0':'2']
+        df_std = pd.DataFrame(
+            {k: v.reset_index()['H2_pnorm']
+             for k, v in flat_regions_dict.items()})
+        df_std = df_std.loc[:, '0':'2']
         for i in range(4):
             stdevs_vertical.append(df_std.iloc[i].T.std(ddof=0))
 
-        all_vertical_noises = [np.format_float_scientific(i, precision=3) for i in stdevs_vertical]
+        all_vertical_noises = [
+            np.format_float_scientific(
+                i,
+                precision=3
+                ) for i in stdevs_vertical
+                ]
         vertical_mean = np.average(np.array(stdevs_vertical[0:4]))
         return all_vertical_noises, vertical_mean
 
-    def get_single_point_noise(self, pressure: int | str | float, frequency: int | str | float) -> Tuple[pd.DataFrame, float, pd.DataFrame]:
+    def get_single_point_noise(self,
+                               pressure: int | str | float,
+                               frequency: int | str | float) -> Tuple[
+                                   pd.DataFrame,
+                                   float,
+                                   pd.DataFrame
+                                   ]:
         """
-        Wrapper for `std_range()` function, applied to single point noise spectrum `df`
+        Wrapper for `std_range()` function,
+        applied to single point noise spectrum `df`
 
         Args:
-            pressure (int|str|float): what pressure
+            pressure (int|str|float): what pressure \
             frequency (int|str|float): what float
 
         Returns:
-            (Tuple[pd.DataFrame, float, pd.DataFrame]): See the definition of `std_range()`
+            (Tuple[pd.DataFrame, float, pd.DataFrame]): See \
+            the definition of `std_range()`
         """
         bench = self.make_noise_bench(pressure, frequency)
         df = bench.spectra.spectra_list[0]
@@ -649,31 +775,51 @@ class CEPAS_SNR_bench():
         n = 3
         return std_range(df, y, n)
 
-    def get_clean_noise(self, pressure: int | str | float, frequency: int | str | float) -> Tuple[None, float]:
+    def get_clean_noise(
+            self,
+            pressure: int | str | float,
+            frequency: int | str | float) -> Tuple[
+                None, float
+                ]:
         """
-        Get the clean noise from noise spectra data, by taking the mean around some central frequency
+        Get the clean noise from noise spectra data, by taking the mean \
+        around some central frequency
 
         Args:
             pressure (int | str | float): which pressure noise to take
-            frequency (int | str |float): which frequency to choose as central frequency
+            frequency (int | str | float): which frequency to choose \
+                as central frequency
 
         Returns:
-            (Tuple[None, float]): get the float number. For consistency (index=1), 0th index is None
+            (Tuple[None, float]): get the float number. \
+            For consistency (index=1), 0th index is None
         """
         if self.noise_path == "":
-            raise ValueError("Please create a noise path using 'object.set_noise_path(path)'")
-        return None, CEPAS_noise_info(path=self.noise_path, pressure=pressure, n=self.noise_number).get_noise_at(frequency=frequency)
+            raise ValueError(
+                "Please create a noise path \
+                    using 'object.set_noise_path(path)'")
+        return None, CEPAS_noise_info(
+            path=self.noise_path,
+            pressure=pressure,
+            n=self.noise_number).get_noise_at(frequency=frequency)
 
-    def get_all_snrs(self, start: List[int|float], end: List[int|float]) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    def get_all_snrs(self,
+                     start: List[int | float],
+                     end: List[int | float]) -> Tuple[
+                         pd.DataFrame,
+                         pd.DataFrame
+                         ]:
         """
         Creates the final report for barplots of signal/noise/SNR
 
         Args:
-            start (List[int|float]): List of two items, peak start and noise start
+            start (List[int|float]): List of two items, peak start and noise \
+            start
             end (List[int|float]): List of two items, peak end and noise end
 
         Returns:
-            (Tuple[pd.DataFrame, pd.DataFrame]): Dict in dict, which organizes final data by pressure and modulation frequency
+            (Tuple[pd.DataFrame, pd.DataFrame]): Dict in dict, which organizes \
+            final data by pressure and modulation frequency
         """
         snr_dict = {}
         noise_dict = {}
@@ -686,14 +832,30 @@ class CEPAS_SNR_bench():
                 signal = self.get_signal(start[0], end[0], p, f)
                 # noise_h = self.get_horizontal_noise(start[1], end[1], p, f)
                 # noise_v = self.get_vertical_noise(start[1], end[1], p, f)
-                noise_h = self.get_horizontal_noise(start[1], end[1], p, f, wstart=1657.5, wend=1677.5)
-                noise_v = self.get_vertical_noise(start[1], end[1], p, f, wstart=1657.5, wend=1677.5)
+                noise_h = self.get_horizontal_noise(
+                    start[1],
+                    end[1], p, f,
+                    wstart=1657.5,
+                    wend=1677.5)
+                noise_v = self.get_vertical_noise(
+                    start[1],
+                    end[1], p, f,
+                    wstart=1657.5,
+                    wend=1677.5)
                 if p == 900:
                     noise_h = self.get_horizontal_noise(start[1], end[1], p, f)
                     noise_v = self.get_vertical_noise(start[1], end[1], p, f)
                 if p == 600:
-                    noise_h = self.get_horizontal_noise(start[1], end[1], p, f, wstart=1682.5, wend=1702.5)
-                    noise_v = self.get_vertical_noise(start[1], end[1], p, f, wstart=1682.5, wend=1702.5)
+                    noise_h = self.get_horizontal_noise(
+                        start[1],
+                        end[1], p, f,
+                        wstart=1682.5,
+                        wend=1702.5)
+                    noise_v = self.get_vertical_noise(
+                        start[1],
+                        end[1], p, f,
+                        wstart=1682.5,
+                        wend=1702.5)
                 noise_c = self.get_clean_noise(p, f)
                 noise_s = self.get_single_point_noise(p, f)
                 snr_h = signal[-1] / noise_h[1]
@@ -701,7 +863,9 @@ class CEPAS_SNR_bench():
                 snr_s = signal[-1] / noise_s[1]
                 snr_c = signal[-1] / noise_c[1]
 
-                print(f"DEBUG: At p={p} and f={f} signal is \n---->{signal[-1]}<----\n")
+                print(
+                    f"DEBUG: At p={p} \
+                        and f={f} signal is \n---->{signal[-1]}<----\n")
                 print(f"noise from single measurements: {noise_s[1]}")
 
                 for snr in [snr_h, snr_v, snr_s, snr_c]:

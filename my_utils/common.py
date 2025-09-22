@@ -1,9 +1,15 @@
 import pandas as pd
-from typing import List, Dict, Any, Tuple, Pattern
+from typing import Tuple
 
-def std_range(df: pd.DataFrame, y: str, coef: int | float = 1) -> Tuple[pd.Series, float, pd.Series]:
+
+def std_range(
+    df: pd.DataFrame,
+    y: str,
+    coef: int | float = 1
+) -> Tuple[pd.DataFrame, float, pd.DataFrame]:
     """
-    Filters data. Creates new stddev for some filtered data based on the IQR from 0.25 quantile to 0.75 quantile.
+    Filters data. Creates new stddev for some filtered data based on the IQR
+    from 0.25 quantile to 0.75 quantile.
 
     Args:
         df (pd.DataFrame): pandas dataframe to work on

@@ -2,12 +2,8 @@
 
 # og python libs
 from typing import List, Dict, Any, Tuple, Pattern
-import time
 import re
 import os
-import pprint
-import itertools
-import sys
 
 # classic DS libs
 import pandas as pd
@@ -15,29 +11,18 @@ import numpy as np
 
 # viz libs
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mtick
-import seaborn as sns
-from ipywidgets import interact, interactive, fixed, interact_manual
-import ipywidgets as widgets
 
 # scipy
-from scipy.integrate import quad
-from scipy.signal import find_peaks, peak_widths, find_peaks_cwt
 from scipy.special import voigt_profile
 from scipy.optimize import curve_fit
 from scipy.constants import k as k_B, c, N_A
-
-# lmfit things
-from lmfit.models import LinearModel, GaussianModel, VoigtModel, SplineModel, ExponentialModel, ExpressionModel, Model, ConstantModel
-from lmfit import Parameter, Parameters
-from lmfit import minimize, minimizer
 
 # ML
 from sklearn.linear_model import LinearRegression
 
 # GenAI
 from google import genai
-from google.genai import types
+# from google.genai import types
 
 # natural data databases
 import hapi
@@ -60,19 +45,20 @@ col_names = {
     8: 'Pressure'       # sensor (external)
 }
 
-    
-
 
 # --------------------- SEPARATE DEFINITIONS -------------------------
-
 
 def hello_test():
     print("Hello!")
 
 
-def std_range(df: pd.DataFrame, y: str, coef: int | float = 1) -> Tuple[pd.Series, float, pd.Series]:
+def std_range(df: pd.DataFrame,
+              y: str,
+              coef: int | float = 1) -> \
+                Tuple[pd.DataFrame, float, pd.DataFrame]:
     """
-    Filters data. Creates new stddev for some filtered data based on the IQR from 0.25 quantile to 0.75 quantile.
+    Filters data. Creates new stddev for some filtered data based on the IQR
+    from 0.25 quantile to 0.75 quantile.
 
     Args:
         df (pd.DataFrame): pandas dataframe to work on
@@ -80,7 +66,8 @@ def std_range(df: pd.DataFrame, y: str, coef: int | float = 1) -> Tuple[pd.Serie
         coef (int | float): larger number makes filtering weaker (default=1)
 
     Returns:
-        (Tuple[pd.DataFrame, float, pd.DataFrame]): new data frame, new stddev, outliers
+        (Tuple[pd.DataFrame, float, pd.DataFrame]): new data frame, new stddev,
+        outliers
     """
     Q1 = df[y].quantile(0.25)
     Q3 = df[y].quantile(0.75)
@@ -91,7 +78,13 @@ def std_range(df: pd.DataFrame, y: str, coef: int | float = 1) -> Tuple[pd.Serie
     return new_df, new_std, outliers
 
 
-def dir_match_dict(path: str, patterns: Dict[int | str | float, Dict[int | str | float, Pattern[str]]]) -> Dict[int | str | float, Dict[int | str | float, List[str]]]:
+def dir_match_dict(path: str,
+                   patterns: Dict[int | str | float,
+                                  Dict[int | str | float,
+                                       Pattern[str]]]) -> \
+                                        Dict[int | str | float,
+                                             Dict[int | str | float,
+                                                  List[str]]]:
     """
     Gets out structured dictionary of dictionaries from
     `create_regex_strings()` return value.
@@ -128,7 +121,11 @@ def dir_match_dict(path: str, patterns: Dict[int | str | float, Dict[int | str |
     return filenames
 
 
-def create_regex_strings(list1: List[int], list2: List[int]) -> Dict[int | str | float, Dict[int | str | float, Pattern[str]]]:
+def create_regex_strings(list1: List[int],
+                         list2: List[int]) -> \
+                            Dict[int | str | float,
+                                 Dict[int | str | float,
+                                      Pattern[str]]]:
     """
     Runs a nested for loop to mach each `list1` item with each
     `list2` item in an appropriate raw string to use with regex
@@ -140,11 +137,15 @@ def create_regex_strings(list1: List[int], list2: List[int]) -> Dict[int | str |
     Returns:
         List[str]: The generated list of strings, to use wherever
     """
-    patterns: Dict[int | str | float, Dict[int | str | float, Pattern[str]]] = {}
+    patterns: Dict[int | str | float,
+                   Dict[int | str | float,
+                        Pattern[str]]] = {}
     for l1 in list1:
         patterns[l1] = {}
         for l2 in list2:
-            current_string = re.compile(f"gasx_{l1}_(12|24|32)_{l2}__msr__[0-9]{{1,2}}")
+            current_string = re.compile(
+                f"gasx_{l1}_(12|24|32)_{l2}__msr__[0-9]{{1,2}}"
+                )
             patterns[l1][l2] = current_string
     return patterns
 
@@ -163,7 +164,10 @@ def lorentzian_hwhm(P_atm, T, gamma_L0, T0, n):
     return P_atm * gamma_L
 
 
-def get_n_strongest(molecule_name: str, molar_mass: float, start: float, end: float, n: int) -> List[Dict[str, Any]]:
+def get_n_strongest(molecule_name: str,
+                    molar_mass: float,
+                    start: float,
+                    end: float, n: int) -> List[Dict[str, Any]]:
     """
     Gets `n` most intensive line parameters for molecule of `molecule_name`
     from HITRAN database in range
@@ -191,19 +195,30 @@ def get_n_strongest(molecule_name: str, molar_mass: float, start: float, end: fl
         "og_order": list(range(len(line_strengths))),
         "sw": line_strengths
     })
-    strongest_line_indexes = line_strengths_df.sort_values(by="sw", ascending=False)[:n]['og_order']
+    strongest_line_indexes = line_strengths_df.sort_values(
+        by="sw",
+        ascending=False
+        )[:n]['og_order']
 
     for strongest_line_index in strongest_line_indexes:
 
         MOL_LINE_PARAMS = {
-            'v0': hapi.getColumn(MOLECULE_NAME, 'nu')[strongest_line_index],  # Line center in cm^-1
-            'gamma_L0': hapi.getColumn(MOLECULE_NAME, 'gamma_air')[strongest_line_index],  # Air-broadening coeff at T0, P0
-            'n_exp': hapi.getColumn(MOLECULE_NAME, 'n_air')[strongest_line_index],  # Temperature exponent
+            'v0': hapi.getColumn(
+                MOLECULE_NAME, 'nu'
+                )[strongest_line_index],  # Line center in cm^-1
+            'gamma_L0': hapi.getColumn(
+                MOLECULE_NAME, 'gamma_air'
+                )[strongest_line_index],  # Air-broadening coeff at T0, P0
+            'n_exp': hapi.getColumn(
+                MOLECULE_NAME, 'n_air'
+                )[strongest_line_index],  # Temperature exponent
             'T0': 296.0,  # Reference Temperature
             'P0': 1.0,  # Reference Pressure (atm)
             'M': molar_mass  # Molar mass of H2O in kg/mol
         }
-        print(f"--- Fetched {molecule_name.upper()} Line Parameters from HITRAN ---")
+        print(
+            f"--- Fetched {molecule_name.upper(
+            )} Line Parameters from HITRAN ---")
         for key, val in MOL_LINE_PARAMS.items():
             print(f"{key}: {val}")
 
@@ -244,7 +259,7 @@ def subtract_hex(n1: str, n2: str) -> str:
         str: a hex subtraction
     """
     h1 = int(n1, 16)
-    h2 = int(n2,16)
+    h2 = int(n2, 16)
     return hex(abs(h1-h2))
 
 
@@ -264,7 +279,9 @@ def sum_hex(n1: str, n2: str) -> str:
     return hex(h1+h2)
 
 
-def get_wavenumber(unit1: float, units1: List[float], units2: List[float]) -> List[float]:
+def get_wavenumber(unit1: float,
+                   units1: List[float],
+                   units2: List[float]) -> List[float]:
     """
     Converts `unit1` to `unit2` based on the
     `sklearn.linear_model.LinearRegression()`
@@ -284,11 +301,14 @@ def get_wavenumber(unit1: float, units1: List[float], units2: List[float]) -> Li
     wavnumber_arr = np.array(units2).reshape(-1, 1)
     lr_wavenumbers.fit(offset_arr, wavnumber_arr)
     a = float(lr_wavenumbers.coef_[0][0])
-    b = float(lr_wavenumbers.intercept_[0]) # type: ignore
+    b = float(lr_wavenumbers.intercept_[0])  # type: ignore
     return [a*unit1 + b, a, b]
 
 
-def get_modamp_around_line_in_wav(modamps: List[str], line_in_offsets: float, conversion_params: Tuple[float, float]) -> List[float]:
+def get_modamp_around_line_in_wav(modamps: List[str],
+                                  line_in_offsets: float,
+                                  conversion_params: Tuple[float, float]) \
+                                    -> List[float]:
     """
     Effectively converts modulation amplitude
     from LabView hexes to [somewhat] actual wavenumbers cm-1
@@ -297,7 +317,7 @@ def get_modamp_around_line_in_wav(modamps: List[str], line_in_offsets: float, co
         modamps (List[str]): Gives a list of modamps as hex
         strings (w/0 '0x' prepended)
         line_in_offsets (float): Line position in offsets (decimal)
-    
+
     Returns:
         List[float]: Modulation amplitudes in wavenumbers cm-1
 
@@ -307,14 +327,21 @@ def get_modamp_around_line_in_wav(modamps: List[str], line_in_offsets: float, co
         offset = int(f"0x{amp}", 16)
         left_bound = line_in_offsets - offset/2
         right_bound = line_in_offsets + offset/2
-        left_bound = conversion_params[0]*left_bound + conversion_params[1] # type: ignore
-        right_bound = conversion_params[0]*right_bound + conversion_params[1] # type: ignore
+        left_bound = conversion_params[0]*left_bound + \
+            conversion_params[1]  # type: ignore
+        right_bound = conversion_params[0]*right_bound + \
+            conversion_params[1]  # type: ignore
         mod_amp = left_bound - right_bound
         amp_wav_list.append(mod_amp)
     return amp_wav_list
 
 
-def amp_test_plot(pressure_string: str | int, path: str, amp_test_dict: Dict, used_amps: List[str]|List[int], vlinepos: float, ow_params: Tuple[List[float], List[float]], ctu) -> None:
+def amp_test_plot(pressure_string: str | int,
+                  path: str,
+                  amp_test_dict: Dict,
+                  used_amps: List[str] | List[int],
+                  vlinepos: float,
+                  ow_params: Tuple[List[float], List[float]], ctu) -> None:
     """
     Do some parameter tests on specific line,
     For example, plot a line with different laser
@@ -327,10 +354,10 @@ def amp_test_plot(pressure_string: str | int, path: str, amp_test_dict: Dict, us
         ampt_test_dict (Dict): Just an empty dict, in which all used
         measurements are supposed to be stored (created globally before call)
         ow_params (Tuple[List[float], List[float]]): pass two lists in the
-        tuple that will be used for a fit to add wavnumbers axis 
+        tuple that will be used for a fit to add wavnumbers axis
         vlinepos (float): argument which can be useful with
         `ipywidgets.interact`-ish calls to find some positions
-    
+
     Returns:
         None: Just plots multiple plots on top of each other,
         with legend of different parameters used
@@ -340,21 +367,47 @@ def amp_test_plot(pressure_string: str | int, path: str, amp_test_dict: Dict, us
     plt.clf()
     plt.figure(figsize=(10, 10))
     for i in used_amps:
-        # auto_freq_test[f'cm{i}_fl'] = CEPAS_measurement(path=path2, path_signature=f"gasx_600_51_{i}__msr__", cols=col_names)
-        amp_test_dict[f'cm{i}_fl'] = ctu(path=path, path_signature=f"gasx_{pressure_string}_{i}_20__msr__", cols=col_names) # type: ignore
-        amp_test_dict[f'cm{i}_fl'].spectra_list[0]['wav'] = get_wavenumber(amp_test_dict[f'cm{i}_fl'].spectra_list[0]['offset1'], ow_params[0], ow_params[1])[0] # type: ignore
+        # auto_freq_test[f'cm{i}_fl'] = CEPAS_measurement(
+        # path=path2, path_signature=f"gasx_600_51_{i}__msr__", cols=col_names)
+        amp_test_dict[f'cm{i}_fl'] = ctu(
+            path=path,
+            path_signature=f"gasx_{pressure_string}_{i}_20__msr__",
+            cols=col_names)  # type: ignore
+        amp_test_dict[f'cm{i}_fl'].spectra_list[0]['wav'] = \
+            get_wavenumber(
+                amp_test_dict[f'cm{i}_fl'].spectra_list[0]['offset1'],
+                ow_params[0], ow_params[1])[0]  # type: ignore
         # auto_test[f'cm{i}_fl'].water_plot()
-        # plt.plot(auto_freq_test[f'cm{i}_fl'].spectra_list[0]['time'], auto_freq_test[f'cm{i}_fl'].spectra_list[0]['RH'], label=f"{i}")
-        # plt.plot(auto_freq_test[f'cm{i}_fl'].spectra_list[1]['time'], auto_freq_test[f'cm{i}_fl'].spectra_list[1]['RH'], label=f"{i}")
-        # plt.plot(auto_freq_test[f'cm{i}_fl'].spectra_list[2]['time'], auto_freq_test[f'cm{i}_fl'].spectra_list[2]['RH'], label=f"{i}")
-        min_val = abs(amp_test_dict[f'cm{i}_fl'].spectra_list[0]['H2_pnorm'].min())
-        max_val = abs(amp_test_dict[f'cm{i}_fl'].spectra_list[0]['H2_pnorm'].max())
+        # plt.plot(
+        # auto_freq_test[f'cm{i}_fl'].spectra_list[0]['time'],
+        # auto_freq_test[f'cm{i}_fl'].spectra_list[0]['RH'],
+        # label=f"{i}")
+        # plt.plot(
+        # auto_freq_test[f'cm{i}_fl'].spectra_list[1]['time'],
+        # auto_freq_test[f'cm{i}_fl'].spectra_list[1]['RH'],
+        # label=f"{i}")
+        # plt.plot(
+        # auto_freq_test[f'cm{i}_fl'].spectra_list[2]['time'],
+        # auto_freq_test[f'cm{i}_fl'].spectra_list[2]['RH'],
+        # label=f"{i}")
+        min_val = abs(
+            amp_test_dict[f'cm{i}_fl'].spectra_list[0]['H2_pnorm'].min())
+        max_val = abs(
+            amp_test_dict[f'cm{i}_fl'].spectra_list[0]['H2_pnorm'].max())
         mins.append(min_val)
         maxs.append(max_val)
         ratio = max_val / min_val
-        plt.plot(amp_test_dict[f'cm{i}_fl'].spectra_list[0]['wav'], amp_test_dict[f'cm{i}_fl'].spectra_list[0]['H2_pnorm'], label=f'Amplitude = {i}, PTR={ratio:.2f}')
+        plt.plot(
+            amp_test_dict[f'cm{i}_fl'].spectra_list[0]['wav'],
+            amp_test_dict[f'cm{i}_fl'].spectra_list[0]['H2_pnorm'],
+            label=f'Amplitude = {i}, PTR={ratio:.2f}')
     plt.legend(loc=2)
-    plt.vlines(vlinepos, ymin=-np.max(np.array(mins)), ymax=np.max(np.array(maxs)), colors=['red'])
+    plt.vlines(
+        vlinepos,
+        ymin=-np.max(np.array(mins)),
+        ymax=np.max(np.array(maxs)),
+        colors=['red']
+        )
     plt.title(f"{pressure_string} mbar")
     plt.show()
 
@@ -375,13 +428,15 @@ def extract_PT_ratios(tests: dict) -> dict:
         print(test)
         for_barplot[test] = {}
         for subtest in tests[test]:
-            min_val = abs(tests[test][subtest].spectra_list[0]['H2_pnorm'].min())
-            max_val = abs(tests[test][subtest].spectra_list[0]['H2_pnorm'].max())
+            min_val = abs(
+                tests[test][subtest].spectra_list[0]['H2_pnorm'].min())
+            max_val = abs(
+                tests[test][subtest].spectra_list[0]['H2_pnorm'].max())
             ratio = max_val / min_val
             key = f"Amplitude: {subtest}"
             value = ratio
             for_barplot[test][key] = value
-    
+
     return for_barplot
 
 
@@ -411,21 +466,34 @@ def defai(prompt: str, defname: str) -> str | None:
     client = G_CLIENT
     response = client.models.generate_content(
         model=model,
-        contents=f"Provide docstringed and type-hinted python function named '{defname}' for the following prompt (in the output include only the code text!!!):\n" + prompt
+        contents=f"\
+            Provide docstringed and type-hinted python function named \
+                '{defname}' for the following prompt (in the output \
+                    include only the code text!!!):\n" + prompt
     )
-    to_exec = response.text
-    if to_exec.startswith("```python") and to_exec.endswith("```"): # type: ignore
-        to_exec = to_exec[len("```python"):-len("```")].strip() # type: ignore
+    to_exec: str | None = response.text
+    if to_exec.startswith(  # type: ignore
+            "```python"
+            ) and to_exec.endswith("```"):  # type: ignore
+        to_exec = to_exec[len("```python"):-len("```")].strip()  # type: ignore
         print("Stripped!")
     return to_exec  # type: ignore
 
 
-def get_voigt(v0: float, sigma_g: float, gamma_l: float, wavenumber_axis: np.ndarray|float=np.linspace(6983.4, 6984, 1000)) -> np.ndarray:
+def get_voigt(
+        v0: float,
+        sigma_g: float,
+        gamma_l: float,
+        wavenumber_axis:
+        np.ndarray | float = np.linspace(6983.4, 6984, 1000)) -> np.ndarray:
     relative_wavenumber = wavenumber_axis - v0
     return voigt_profile(relative_wavenumber, sigma_g, gamma_l)
 
 
-def get_range(df: pd.DataFrame, axis: str, ax0: float, ax1: float) -> pd.Series:
+def get_range(df: pd.DataFrame,
+              axis: str,
+              ax0: float,
+              ax1: float) -> pd.DataFrame:
     ddf = df[df[axis] > ax0 and df[axis] < ax1]
     return ddf
 
