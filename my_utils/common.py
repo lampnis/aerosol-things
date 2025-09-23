@@ -17,7 +17,8 @@ def std_range(
         coef (int | float): larger number makes filtering weaker (default=1)
 
     Returns:
-        (Tuple[pd.DataFrame, float, pd.DataFrame]): new data frame, new stddev, outliers
+        (Tuple[pd.DataFrame, float, pd.DataFrame]): new data frame, \
+            new stddev, outliers
     """
     Q1 = df[y].quantile(0.25)
     Q3 = df[y].quantile(0.75)

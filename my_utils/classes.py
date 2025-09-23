@@ -318,7 +318,8 @@ class CEPAS_benchmark():
 
         Args:
             path (str): path to the benchmark spectral measurements
-            spectra_names (Dict[int | str | float, Dict[int | str | float, List[str]]]): \
+            spectra_names (Dict[int | str | float, Dict[int | str | float, \
+                List[str]]]): \
                 special dictionary that stores the filenames of the spectra
             pressure (int|str|float): pressure to look at
             frequency (int|str|float): frequency to look at
