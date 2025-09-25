@@ -756,8 +756,7 @@ class CEPAS_SNR_bench():
                                frequency: int | str | float) -> Tuple[
                                    pd.DataFrame,
                                    float,
-                                   pd.DataFrame
-                                   ]:
+                                   pd.DataFrame]:
         """
         Wrapper for `std_range()` function,
         applied to single point noise spectrum `df`
