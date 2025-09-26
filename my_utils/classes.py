@@ -46,7 +46,8 @@ col_names = {
 # ---------------------------- CLASSES -------------------------------
 class CEPAS_measurement():
 
-    def __init__(self, path: str, path_signature: str | Pattern[str], cols: Dict[int, str]) -> None:
+    def __init__(self, path: str, path_signature: str | Pattern[str],
+                 cols: Dict[int, str]) -> None:
         """
         Initialize measurement from csv file to do data anlysis in
         python (pandas, numpy etc.)
@@ -63,23 +64,77 @@ class CEPAS_measurement():
             use as regex to find files
             cols (Dict[int, str]): pass a dict of columns to use as new column
             names
-        
+
         Returns:
             None: but creates attributes
         """
         self.path = path
-        self.raw_spectra = [pd.read_csv(path+self.dir_match(path_signature)[i], sep=r'\s+', header=None, names=list(cols.values()), index_col=False) for i in range(len(self.dir_match(path_signature)))]
+        self.raw_spectra = [
+            pd.read_csv(
+                path+self.dir_match(path_signature)[i],
+                sep=r'\s+',
+                header=None,
+                names=list(cols.values()),
+                index_col=False)
+            for i in range(len(self.dir_match(path_signature)))
+            ]
         self.n_spectra = len(self.raw_spectra)
 
-        self.spectra_list: List[pd.DataFrame] = [self.raw_spectra[i].iloc[1:,:].copy() for i, _ in enumerate(self.raw_spectra)]
-        for df_idx in range(len(self.spectra_list)):
-            self.spectra_list[df_idx].loc[:,'time_subtracted'] = self.spectra_list[df_idx]['time']           
-            self.spectra_list[df_idx].loc[:,'time_subtracted'] -= self.spectra_list[df_idx]['time'].min()
-            self.spectra_list[df_idx].loc[:,'H2_pnorm'] = self.spectra_list[df_idx].loc[:,'H2'] / (self.spectra_list[df_idx].loc[:,'P_las']+0.0025)
-            self.spectra_list[df_idx].loc[:,'H3_pnorm'] = self.spectra_list[df_idx].loc[:,'H3'] / (self.spectra_list[df_idx].loc[:,'P_las']+0.0025)
+        self.spectra_list: List[pd.DataFrame] = [
+            self.raw_spectra[i].iloc[1:, :].copy()
+            for i, _ in enumerate(self.raw_spectra)
+            ]
 
-        self.mean_humidities = {df_idx: self.spectra_list[df_idx]['RH'].mean() for df_idx in range(len(self.spectra_list))}
-        self.mean_humidities_norm = np.array(list(self.mean_humidities.values()))/np.array(list(self.mean_humidities.values())).max()
+        for df_idx in range(len(self.spectra_list)):
+
+            self.spectra_list[
+                df_idx
+                ].loc[
+                    :, 'time_subtracted'
+                    ] = self.spectra_list[df_idx]['time']
+
+            self.spectra_list[
+                df_idx
+                ].loc[
+                    :, 'time_subtracted'
+                    ] -= self.spectra_list[df_idx]['time'].min()
+
+            self.spectra_list[
+                df_idx
+                ].loc[
+                    :, 'H2_pnorm'
+                    ] = self.spectra_list[
+                        df_idx
+                        ].loc[
+                            :, 'H2'
+                            ] / (self.spectra_list[
+                                df_idx
+                                ].loc[:, 'P_las']+0.0025)
+
+            self.spectra_list[
+                df_idx
+                ].loc[
+                    :, 'H3_pnorm'
+                    ] = self.spectra_list[
+                        df_idx
+                        ].loc[
+                            :, 'H3'
+                            ] / (self.spectra_list[
+                                df_idx
+                                ].loc[
+                                    :, 'P_las'
+                                    ]+0.0025)
+
+        self.mean_humidities = {
+            df_idx: self.spectra_list[
+                df_idx
+                ]['RH'].mean() for df_idx in range(len(self.spectra_list))
+        }
+        self.mean_humidities_norm = np.array(
+            list(
+                self.mean_humidities.values()
+            )
+            )/np.array(list(self.mean_humidities.values())).max()
         # self.mean_humidities_norm = None
 
         self.peaks_starts_ends = {
@@ -89,29 +144,57 @@ class CEPAS_measurement():
         # peak 1 idx 40-70
         self.peak1_start = self.peaks_starts_ends[1][0]
         self.peak1_end = self.peaks_starts_ends[1][1]
-        self.peak_1s = [self.spectra_list[i].loc[self.peak1_start:self.peak1_end,:]['H2'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_1s_norm = [self.spectra_list[i].loc[self.peak1_start:self.peak1_end,:]['H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_1s_norm_mins = [self.spectra_list[i].loc[self.peak1_start:self.peak1_end,:]['H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_1s = [
+            self.spectra_list[i].loc[
+                self.peak1_start:self.peak1_end, :][
+                    'H2'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_1s_norm = [
+            self.spectra_list[
+                i].loc[self.peak1_start:self.peak1_end, :][
+                    'H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_1s_norm_mins = [
+            self.spectra_list[i].loc[
+                self.peak1_start:self.peak1_end, :][
+                    'H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+
         self.ylim_11 = np.array(self.peak_1s_norm_mins).min() - 0.1
         self.ylim_12 = np.array(self.peak_1s_norm).max() + 0.1
 
         # peak 2 idx 150-175
         self.peak2_start = self.peaks_starts_ends[2][0]
         self.peak2_end = self.peaks_starts_ends[2][1]
-        self.peak_2s = [self.spectra_list[i].loc[self.peak2_start:self.peak2_end,:]['H2'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_2s_norm = [self.spectra_list[i].loc[self.peak2_start:self.peak2_end,:]['H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_2s_norm_mins = [self.spectra_list[i].loc[self.peak2_start:self.peak2_end,:]['H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_2s = [
+            self.spectra_list[i].loc[
+                self.peak2_start:self.peak2_end, :][
+                    'H2'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_2s_norm = [
+            self.spectra_list[i].loc[
+                self.peak2_start:self.peak2_end, :][
+                    'H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_2s_norm_mins = [
+            self.spectra_list[i].loc[
+                self.peak2_start:self.peak2_end, :][
+                    'H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+
         self.ylim_21 = np.array(self.peak_2s_norm_mins).min() - 0.1
+
         self.ylim_22 = np.array(self.peak_2s_norm).max() + 0.1
 
-        self.pressures = [self.spectra_list[i]['Pressure'].unique() for i, _ in enumerate(self.spectra_list)]
-    
+        self.pressures = [
+            self.spectra_list[i]['Pressure'].unique()
+            for i, _ in enumerate(self.spectra_list)]
+
     def replace(self, df_idx: int, df2: pd.DataFrame) -> None:
         """
         Replaces df1 w/ df2
         """
         self.spectra_list[df_idx] = df2
-
 
     def redo_peaks(self):
         """
@@ -119,18 +202,43 @@ class CEPAS_measurement():
         """
         self.peak1_start = self.peaks_starts_ends[1][0]
         self.peak1_end = self.peaks_starts_ends[1][1]
-        self.peak_1s = [self.spectra_list[i].loc[self.peak1_start:self.peak1_end,:]['H2'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_1s_norm = [self.spectra_list[i].loc[self.peak1_start:self.peak1_end,:]['H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_1s_norm_mins = [self.spectra_list[i].loc[self.peak1_start:self.peak1_end,:]['H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+        self.peak_1s = [
+            self.spectra_list[i].loc[
+                self.peak1_start:self.peak1_end, :][
+                    'H2'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_1s_norm = [
+            self.spectra_list[i].loc[
+                self.peak1_start:self.peak1_end, :][
+                    'H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_1s_norm_mins = [
+            self.spectra_list[i].loc[
+                self.peak1_start:self.peak1_end, :][
+                    'H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+
         self.ylim_11 = np.array(self.peak_1s_norm_mins).min() - 0.1
         self.ylim_12 = np.array(self.peak_1s_norm).max() + 0.1
 
         # peak 2 idx 150-175
         self.peak2_start = self.peaks_starts_ends[2][0]
         self.peak2_end = self.peaks_starts_ends[2][1]
-        self.peak_2s = [self.spectra_list[i].loc[self.peak2_start:self.peak2_end,:]['H2'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_2s_norm = [self.spectra_list[i].loc[self.peak2_start:self.peak2_end,:]['H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
-        self.peak_2s_norm_mins = [self.spectra_list[i].loc[self.peak2_start:self.peak2_end,:]['H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_2s = [
+            self.spectra_list[i].loc[
+                self.peak2_start:self.peak2_end, :][
+                    'H2'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_2s_norm = [
+            self.spectra_list[i].loc[
+                self.peak2_start:self.peak2_end, :][
+                    'H2_pnorm'].max() for i, _ in enumerate(self.spectra_list)]
+
+        self.peak_2s_norm_mins = [
+            self.spectra_list[i].loc[
+                self.peak2_start:self.peak2_end, :][
+                    'H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
+
         self.ylim_21 = np.array(self.peak_2s_norm_mins).min() - 0.1
         self.ylim_22 = np.array(self.peak_2s_norm).max() + 0.1
 
@@ -143,14 +251,14 @@ class CEPAS_measurement():
             n_peak (int): which peak to set (1 or 2)
             start (int): peak start position (in offsets)
             end (int): peak end position (in offsets)
-        
+
         Returns:
             None: but changes defaults in `peaks_starts_ends` dictionary
         """
         self.peaks_starts_ends[n_peak] = (start, end)
-        
+
     def avg(self) -> pd.DataFrame:
-        n = self.n_spectra 
+        n = self.n_spectra
         if n == 0:
             raise ValueError("No spectra to average")
         spectra_sum = None
@@ -159,9 +267,12 @@ class CEPAS_measurement():
                 spectra_sum = s.copy()
             else:
                 spectra_sum += s.copy()
-        return spectra_sum / n # type: ignore
-    
-    def water_plot(self, save: bool=False, save_path: str="./water_plot_default.svg") -> None:
+        return spectra_sum / n  # type: ignore
+
+    def water_plot(self,
+                   save: bool = False,
+                   save_path: str = "./water_plot_default.svg"
+                   ) -> None:
         """
         Creates a plot with full spectrum,
         two peaks of choice,their intensities across measurements
@@ -176,9 +287,14 @@ class CEPAS_measurement():
         plt.clf()
         fig = plt.figure(figsize=(17, 11))  # noqa: F841
 
-        ax0 = plt.subplot2grid(shape=(12, 12), loc=(6, 0), colspan=6, rowspan=6)
+        ax0 = plt.subplot2grid(shape=(12, 12),
+                               loc=(6, 0),
+                               colspan=6,
+                               rowspan=6)
         for df_idx in range(len(self.spectra_list)):
-            ax0.plot(self.spectra_list[df_idx]['offset1'], self.spectra_list[df_idx]['H2_pnorm'], label=f"{df_idx}")
+            ax0.plot(self.spectra_list[df_idx]['offset1'],
+                     self.spectra_list[df_idx]['H2_pnorm'],
+                     label=f"{df_idx}")
         # ax0.set_xlim()
         # ax0.set_ylim(-0.5, 1)
         ax0.set_title("Power normalized spectrum")
@@ -186,40 +302,59 @@ class CEPAS_measurement():
         ax0.set_xlabel("Arbitrary index")
         # ax0.set_xlabel("Laser current, arbitrary units")
 
-        ax1 = plt.subplot2grid(shape=(12, 12), loc=(0, 6), colspan=5, rowspan=4)
-        ax1.scatter(list(self.mean_humidities.keys()), self.mean_humidities_norm)
+        ax1 = plt.subplot2grid(shape=(12, 12),
+                               loc=(0, 6),
+                               colspan=5,
+                               rowspan=4)
+        ax1.scatter(list(self.mean_humidities.keys()),
+                    self.mean_humidities_norm)
         ax1.set_xlabel('measurement #')
         ax1.set_ylabel('mean relative humidity, %')
         ax1.set_title("relative humidity over different measurement sessions")
 
-        ax2 = plt.subplot2grid(shape=(12, 12), loc=(4, 6), colspan=5, rowspan=4)
-        plt.scatter(list(range(len(self.peak_1s_norm))), self.peak_1s_norm)
+        ax2 = plt.subplot2grid(shape=(12, 12),
+                               loc=(4, 6),
+                               colspan=5,
+                               rowspan=4)
+        plt.scatter(list(range(len(self.peak_1s_norm))),
+                    self.peak_1s_norm)
         ax2.set_title("Peak 1 over sessions")
         ax2.set_xlabel("measurement #")
         ax2.set_ylabel("Normalized peak intensity")
 
-        ax3 = plt.subplot2grid(shape=(12, 12), loc=(8, 6), colspan=5, rowspan=4)
+        ax3 = plt.subplot2grid(shape=(12, 12),
+                               loc=(8, 6),
+                               colspan=5,
+                               rowspan=4)
         ax3.scatter(list(range(len(self.peak_2s_norm))), self.peak_2s_norm)
         ax3.set_title("Peak 2 over sessions")
         ax3.set_xlabel("measurement #")
         ax3.set_ylabel("Normalized peak intensity")
 
-
-
-        ax4 = plt.subplot2grid(shape=(12, 12), loc=(0, 0), colspan=3, rowspan=6)
+        ax4 = plt.subplot2grid(shape=(12, 12),
+                               loc=(0, 0),
+                               colspan=3,
+                               rowspan=6)
         for df_idx in range(len(self.spectra_list)):
-            ax4.plot(self.spectra_list[df_idx]['offset1'], self.spectra_list[df_idx]['H2_pnorm'], label=f"{df_idx}")
-        ax4.set_xlim(40, 75) # x=index
+            ax4.plot(self.spectra_list[df_idx]['offset1'],
+                     self.spectra_list[df_idx]['H2_pnorm'],
+                     label=f"{df_idx}")
+        ax4.set_xlim(40, 75)  # x=index
         ax4.set_ylim(self.ylim_11, self.ylim_12)
         ax4.set_title("Peak 1")
         ax4.legend()
         # plt.xlabel("time, s")
         ax4.set_xlabel("arbitrary index")
 
-        ax5 = plt.subplot2grid(shape=(12, 12), loc=(0, 3), colspan=3, rowspan=6)
+        ax5 = plt.subplot2grid(shape=(12, 12),
+                               loc=(0, 3),
+                               colspan=3,
+                               rowspan=6)
         for df_idx in range(len(self.spectra_list)):
-            ax5.plot(self.spectra_list[df_idx]['offset1'], self.spectra_list[df_idx]['H2_pnorm'], label=f"{df_idx}")
-        ax5.set_xlim(142, 182) # x=index
+            ax5.plot(self.spectra_list[df_idx]['offset1'],
+                     self.spectra_list[df_idx]['H2_pnorm'],
+                     label=f"{df_idx}")
+        ax5.set_xlim(142, 182)  # x=index
         ax5.set_ylim(self.ylim_21, self.ylim_22)
         ax5.set_title("Peak 2")
         ax5.legend()
@@ -232,7 +367,10 @@ class CEPAS_measurement():
         if save:
             plt.savefig(f"{save_path}")
 
-    def spectrum_only_plot(self, save: bool=False, save_path: str="./spectrum_only_plot_default.svg") -> None:
+    def spectrum_only_plot(self,
+                           save: bool = False,
+                           save_path: str = "./spectrum_only_plot_default.svg"
+                           ) -> None:
         """
         Makes just a simple plot of spectrum with all measurements
         laid over each other
@@ -243,18 +381,21 @@ class CEPAS_measurement():
         Returns:
             None: but saves fig if specified!
         """
-        plt.clf()
+        plt.close()
         fig = plt.figure(figsize=(17, 5.5))  # noqa: F841
 
-        ax0 = plt.subplot2grid(shape=(12, 12), loc=(0, 0), colspan=12, rowspan=12)
+        ax0 = plt.subplot2grid(shape=(12, 12), loc=(0, 0),
+                               colspan=12,
+                               rowspan=12)
         for df_idx in range(len(self.spectra_list)):
-            ax0.plot(self.spectra_list[df_idx]['offset1'], self.spectra_list[df_idx]['H2_pnorm'], label=f"{df_idx}")
+            ax0.plot(self.spectra_list[df_idx]['offset1'],
+                     self.spectra_list[df_idx]['H2_pnorm'],
+                     label=f"{df_idx}")
         # ax0.set_xlim()
         # ax0.set_ylim(-0.5, 1)
         ax0.set_title("Power normalized spectrum")
         ax0.legend()
         ax0.set_xlabel("Arbitrary index")
-        
 
         plt.tight_layout()
         plt.show()
@@ -264,12 +405,13 @@ class CEPAS_measurement():
 
     def dir_match(self, pattern: str | Pattern[str]) -> List[str]:
         """
-        Iterates through contents of dir and matches according to some regex pattern
+        Iterates through contents of dir and matches according to some regex \
+            pattern
 
         Args:
             path (str): path to directory of interest
             pattern (str): pattern to find, either simple or regex
-        
+
         Returns:
             list[str]: All matches
         """
@@ -279,14 +421,20 @@ class CEPAS_measurement():
             if re.match(pattern, item) is not None:
                 matched.append(item)
         return matched
-    
+
     def add_wavenumber_axis(self, df, units1, units2):
         """
         adds a wavenumber axis based on `get_wavenumber()` function
         """
-        df['wavenumbers'] = self.get_wavenumber(df['offset1'], units1, units2)[0]
+        df['wavenumbers'] = self.get_wavenumber(df['offset1'],
+                                                units1,
+                                                units2)[0]
 
-    def get_wavenumber(self, unit1: float | pd.Series, units1: List[float], units2: List[float]) -> List[float | pd.Series]:
+    def get_wavenumber(self,
+                       unit1: float | pd.Series,
+                       units1: List[float],
+                       units2: List[float]
+                       ) -> List[float | pd.Series]:
         """
         Converts `unit1` to `unit2` based on the
         `sklearn.linear_model.LinearRegression()`
@@ -295,8 +443,9 @@ class CEPAS_measurement():
         Args:
             unit1 (float): Value of interest (unit from which will convert)
             units1 (list[float]): List of values in units of interest
-            units2 (list[float]): List of values in units from which we are converting
-        
+            units2 (list[float]): List of values in units from which we are \
+                converting
+
         Returns:
             List[float]: Value in units of interest, slope, intercept
         """
@@ -305,12 +454,19 @@ class CEPAS_measurement():
         wavnumber_arr = np.array(units2).reshape(-1, 1)
         lr_wavenumbers.fit(offset_arr, wavnumber_arr)
         a = float(lr_wavenumbers.coef_[0][0])
-        b = float(lr_wavenumbers.intercept_[0]) # type: ignore
+        b = float(lr_wavenumbers.intercept_[0])  # type: ignore
         return [a*unit1 + b, a, b]
 
 
 class CEPAS_benchmark():
-    def __init__(self, path: str, spectra_names: Dict[int | str | float, Dict[int | str | float, List[str]]], pressure: int | str | float, frequency: int | str | float, noise_flag: bool=False) -> None:
+    def __init__(self,
+                 path: str,
+                 spectra_names: Dict[
+                     int | str | float, Dict[
+                         int | str | float, List[str]]],
+                 pressure: int | str | float,
+                 frequency: int | str | float,
+                 noise_flag: bool = False) -> None:
         """
         Create the object for benchmark measurements.
         Keeps everything organized in the dictionary (depth=2).
@@ -818,8 +974,8 @@ class CEPAS_SNR_bench():
             end (List[int|float]): List of two items, peak end and noise end
 
         Returns:
-            (Tuple[pd.DataFrame, pd.DataFrame]): Dict in dict, which organizes \
-            final data by pressure and modulation frequency
+            (Tuple[pd.DataFrame, pd.DataFrame]): Dict in dict, \
+                which organizes final data by pressure and modulation frequency
         """
         snr_dict = {}
         noise_dict = {}
