@@ -52,6 +52,29 @@ def hello_test():
     print("Hello!")
 
 
+def phase_correct(df: pd.DataFrame,
+                  y: str,
+                  x: str) -> Tuple[pd.Series, pd.Series]:
+    """
+    phase correct the spectrum based on two pi/2 (90 degrees) offset
+    intensity data columns
+
+    Args:
+        df (pd.DataFrame): used data
+        y (str): Name of y data
+        x (str): Name of x data
+
+    Returns:
+        (Tuple[pd.Series, pd.Series]): Returns phase corrected data: \
+        one should be true spectrum, the other should be some small \
+        residual near 0.
+    """
+    correction_angle = np.atan2(df[y].mean(), df[x].mean())
+    X_cor = np.cos(correction_angle)*df[y] + np.sin(correction_angle)*df[x]
+    Y_cor = -np.sin(correction_angle)*df[y] + np.cos(correction_angle)*df[x]
+    return X_cor, Y_cor
+
+
 def std_range(df: pd.DataFrame,
               y: str,
               coef: int | float = 1) -> \
@@ -494,6 +517,20 @@ def get_range(df: pd.DataFrame,
               axis: str,
               ax0: float,
               ax1: float) -> pd.DataFrame:
+    """
+    Returns some slice of dataframe according to
+    the slice of some column
+
+    Args:
+        df (pd.DataFrame): Pandas dataframe to work on
+        axis (str): The name of the criterion column
+        ax0 (float): Low bound of criterion column
+        ax1 (float): High bound of criterion column
+
+    Returns:
+        (pd.DataFrame): the frame according to the slice of criterion \
+        column
+    """
     ddf = df[df[axis] > ax0 and df[axis] < ax1]
     return ddf
 
