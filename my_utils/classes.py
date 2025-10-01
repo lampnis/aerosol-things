@@ -672,6 +672,17 @@ class CEPAS_noise_info():
                  path: str,
                  pressure: int | str | float,
                  n: int | None = None):
+        """
+        Initiate the noise info. If there are multiple \
+        sessions where the noise could be different, \
+        it should be indicated with `n`
+
+        Args:
+            path (str): where the noise spectra are located
+            pressure (int | str | float): which pressure
+            n (int): optional, choose specific session of \
+            noise spectra measrement
+        """
         if n is not None:
             self.spectrum = pd.read_csv(
                 f"{path}Spectrum{pressure}_{n}.txt",

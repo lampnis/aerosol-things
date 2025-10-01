@@ -54,10 +54,11 @@ def hello_test():
 
 def phase_correct(df: pd.DataFrame,
                   y: str,
-                  x: str) -> Tuple[pd.Series, pd.Series]:
+                  x: str) -> Tuple[pd.Series, pd.Series, float]:
     """
     phase correct the spectrum based on two pi/2 (90 degrees) offset
-    intensity data columns
+    intensity data columns. Starts at some angle, then optimizes
+    again with resolution
 
     Args:
         df (pd.DataFrame): used data
@@ -65,14 +66,38 @@ def phase_correct(df: pd.DataFrame,
         x (str): Name of x data
 
     Returns:
-        (Tuple[pd.Series, pd.Series]): Returns phase corrected data: \
-        one should be true spectrum, the other should be some small \
-        residual near 0.
+        (Tuple[pd.Series, pd.Series, float, int]): Returns \
+            phase corrected data: one should be true \
+            spectrum, the other should be some small residual \
+                near 0.
     """
-    correction_angle = np.atan2(df[y].mean(), df[x].mean())
-    X_cor = np.cos(correction_angle)*df[y] + np.sin(correction_angle)*df[x]
-    Y_cor = -np.sin(correction_angle)*df[y] + np.cos(correction_angle)*df[x]
-    return X_cor, Y_cor
+    solution: Tuple[pd.Series, pd.Series, float] | None = None
+    min_residual: float = np.inf
+    for another_angle in np.linspace(0, 2*np.pi, 1000):
+
+        correction_angle = np.atan2(df[y].mean(),
+                                    df[x].mean()) - another_angle
+
+        X_cor = np.cos(correction_angle)*df[y] + \
+            np.sin(correction_angle)*df[x]
+        Y_cor = -np.sin(correction_angle)*df[y] + \
+            np.cos(correction_angle)*df[x]
+        current_residual = abs(Y_cor.mean())
+
+        if current_residual < min_residual:
+            min_residual = abs(Y_cor.mean())
+            solution = (X_cor, Y_cor, correction_angle)
+
+    if solution is not None:
+        abs_max = abs(solution[0].max())
+        abs_min = abs(solution[0].min())
+
+        if abs_min > abs_max:
+            solution = (-solution[0], -solution[1], solution[2])
+
+        return solution
+    else:
+        raise TypeError("Make sure that solution to phase correct is not None")
 
 
 def std_range(df: pd.DataFrame,
