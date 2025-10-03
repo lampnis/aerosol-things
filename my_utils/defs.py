@@ -275,14 +275,14 @@ def get_n_strongest(molecule_name: str,
     return line_dicts
 
 
-def dir_match(path: str, pattern: Pattern[str]) -> list[str]:
+def dir_match(path: str, pattern: Pattern[str] | str) -> list[str]:
     """
     Iterates through contents of dir and matches according
     to some regex pattern
 
     Args:
         path (str): path to directory of interest
-        pattern (str): pattern to find, either simple or regex
+        pattern (Pattern[str] | str): pattern to find, either simple or regex
 
     Returns:
         list[str]: All matches

@@ -23,7 +23,7 @@ from google import genai
 # from google.genai import types
 
 # natural data databases
-from my_utils.common import std_range
+from my_utils.common import std_range, dir_match
 
 # API setups
 G_MODEL_ID = "gemini-2.5-flash-preview-05-20"
@@ -683,16 +683,28 @@ class CEPAS_noise_info():
             n (int): optional, choose specific session of \
             noise spectra measrement
         """
+        
         if n is not None:
+
+            re_str = dir_match(
+                path,
+                re.compile(f"Spectrum.*{pressure}_{n}.txt")
+            )
+
             self.spectrum = pd.read_csv(
-                f"{path}Spectrum{pressure}_{n}.txt",
+                f"{path}{re_str[0]}",
                 sep=r'\s+',
                 header=None,
                 names=['freq',
                        'intensity'])
         else:
+
+            re_str = dir_match(
+                path,
+                re.compile(f"Spectrum.*{pressure}.txt")
+            )
             self.spectrum = pd.read_csv(
-                f"{path}Spectrum{pressure}.txt",
+                f"{path}{re_str[0]}",
                 sep=r'\s+',
                 header=None,
                 names=['freq',
