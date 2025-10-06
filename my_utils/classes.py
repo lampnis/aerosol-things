@@ -130,12 +130,16 @@ class CEPAS_measurement():
                 df_idx
                 ]['RH'].mean() for df_idx in range(len(self.spectra_list))
         }
-        self.mean_humidities_norm = np.array(
-            list(
-                self.mean_humidities.values()
-            )
-            )/np.array(list(self.mean_humidities.values())).max()
-        # self.mean_humidities_norm = None
+        try:
+            self.mean_humidities_norm = np.array(
+                list(
+                    self.mean_humidities.values()
+                )
+                )/np.array(list(self.mean_humidities.values())).max()
+        except ValueError as e:
+            print(f"Low importance variable, replaced with none \
+                  \n error: {e}")
+            self.mean_humidities_norm = None
 
         self.peaks_starts_ends = {
             1: (40, 70),
@@ -306,8 +310,9 @@ class CEPAS_measurement():
                                loc=(0, 6),
                                colspan=5,
                                rowspan=4)
-        ax1.scatter(list(self.mean_humidities.keys()),
-                    self.mean_humidities_norm)
+        if self.mean_humidities_norm is not None:
+            ax1.scatter(list(self.mean_humidities.keys()),
+                        self.mean_humidities_norm)
         ax1.set_xlabel('measurement #')
         ax1.set_ylabel('mean relative humidity, %')
         ax1.set_title("relative humidity over different measurement sessions")
@@ -466,7 +471,8 @@ class CEPAS_benchmark():
                          int | str | float, List[str]]],
                  pressure: int | str | float,
                  frequency: int | str | float,
-                 noise_flag: bool = False) -> None:
+                 noise_flag: bool = False,
+                 file_signature: str = "gasx") -> None:
         """
         Create the object for benchmark measurements.
         Keeps everything organized in the dictionary (depth=2).
@@ -491,7 +497,10 @@ class CEPAS_benchmark():
         self.frequency = frequency
         self.spectra = CEPAS_measurement(
             path=path,
-            path_signature=f"gasx_{pressure}_[0-9]{{2}}_{frequency}_.+",
+            path_signature=f"{
+                file_signature}_{
+                    pressure}_[0-9]{{2}}_{
+                        frequency}_.+",
             cols=col_names)
         self.noise_flag = noise_flag
 
@@ -762,12 +771,14 @@ class CEPAS_SNR_bench():
                          List[str]]],
                  bench_path: str = "",
                  noise_path: str = "",
-                 noise_number: None | int = None):
+                 noise_number: None | int = None,
+                 file_sig: str = "gasx"):
         self.snr_dict = snr_dict
         self.bench_path = bench_path
         self.bench_files = snr_dict
         self.noise_path = noise_path
         self.noise_number = noise_number
+        self.file_sig = file_sig
 
     def set_noise_path(self, path: str) -> None:
         """
@@ -813,7 +824,8 @@ class CEPAS_SNR_bench():
             self.bench_files,
             pressure,
             frequency,
-            noise_flag=True
+            noise_flag=True,
+            file_signature=self.file_sig
             )
         return bench_noise
 
@@ -821,7 +833,8 @@ class CEPAS_SNR_bench():
                    start: int | float,
                    end: int | float,
                    pressure: int | str | float,
-                   frequency: int | str | float) -> Tuple[
+                   frequency: int | str | float,
+                   n_knots: int = 11) -> Tuple[
                        pd.DataFrame,
                        str,
                        pd.DataFrame,
@@ -836,13 +849,21 @@ class CEPAS_SNR_bench():
             end (int|float): end of the peak window
             pressure (int|str|float): pressure of interest
             frequency (int|str|float): frequency of interest
+            n_knots (int): default = 11, for backend splines, adjust \
+                if necessary
+
+        Returns:
+            (Tuple[pd.DataFrame, str, pd.DataFrame, pd.Dataframe, float]): \
+                signal level is the last one. For other values, see \
+                `CEPAS_benchmark.get_spline_of_window()` docstring
+
         """
         bench = self.make_bench(pressure, frequency)
         peak_start = start
         peak_end = end
         peak_spline = bench.get_spline_of_window(
             n_spectrum=-1,
-            n_knots=11,
+            n_knots=n_knots,
             start=peak_start,
             end=peak_end
             )
@@ -854,14 +875,15 @@ class CEPAS_SNR_bench():
                              pressure: int | str | float,
                              frequency: int | str | float,
                              wstart: int | float = 1687.5,
-                             wend: int | float = 1707.5):
+                             wend: int | float = 1707.5,
+                             n_knots: int = 10):
         """
         Get the horizontal noise at some window
         """
         bench = self.make_bench(pressure, frequency)
         flat_regions = bench.get_window(start=start, end=end)
         spline_of_avg = bench.get_spline_of_window(
-            n_knots=10,
+            n_knots=n_knots,
             start=start,
             end=end)
         flat_regions_dict = {
@@ -894,7 +916,8 @@ class CEPAS_SNR_bench():
                            pressure: int | str | float,
                            frequency: int | str | float,
                            wstart: int | float = 1687.5,
-                           wend: int | float = 1707.5) -> Tuple[
+                           wend: int | float = 1707.5,
+                           n_knots: int = 10) -> Tuple[
                                List[str] | List[float],
                                float | np.floating[Any]
                                ]:
@@ -904,7 +927,7 @@ class CEPAS_SNR_bench():
         bench = self.make_bench(pressure, frequency)
         flat_regions = bench.get_window(start=start, end=end)
         spline_of_avg = bench.get_spline_of_window(
-            n_knots=10,
+            n_knots=n_knots,
             start=start,
             end=end
             )
@@ -993,7 +1016,8 @@ class CEPAS_SNR_bench():
 
     def get_all_snrs(self,
                      start: List[int | float],
-                     end: List[int | float]) -> Tuple[
+                     end: List[int | float],
+                     n_knots: int = 10) -> Tuple[
                          pd.DataFrame,
                          pd.DataFrame
                          ]:
@@ -1004,9 +1028,11 @@ class CEPAS_SNR_bench():
             start (List[int|float]): List of two items, peak start and noise \
             start
             end (List[int|float]): List of two items, peak end and noise end
+            n_knots (int): for backend splines, adjust if necessary, default=10
 
         Returns:
-            (Tuple[pd.DataFrame, pd.DataFrame]): Dict in dict, \
+            (Tuple[pd.DataFrame, pd.DataFrame]): df based on \
+                SNR dict and noise dict, \
                 which organizes final data by pressure and modulation frequency
         """
         snr_dict = {}
@@ -1017,33 +1043,42 @@ class CEPAS_SNR_bench():
             for f in self.snr_dict[p].keys():
                 snr_dict[p][f] = []
                 noise_dict[p][f] = []
-                signal = self.get_signal(start[0], end[0], p, f)
+                signal = self.get_signal(start[0],
+                                         end[0],
+                                         p, f,
+                                         n_knots=n_knots)
                 # noise_h = self.get_horizontal_noise(start[1], end[1], p, f)
                 # noise_v = self.get_vertical_noise(start[1], end[1], p, f)
                 noise_h = self.get_horizontal_noise(
                     start[1],
                     end[1], p, f,
                     wstart=1657.5,
-                    wend=1677.5)
+                    wend=1677.5,
+                    n_knots=n_knots)
                 noise_v = self.get_vertical_noise(
                     start[1],
                     end[1], p, f,
                     wstart=1657.5,
-                    wend=1677.5)
+                    wend=1677.5,
+                    n_knots=n_knots)
                 if p == 900:
-                    noise_h = self.get_horizontal_noise(start[1], end[1], p, f)
-                    noise_v = self.get_vertical_noise(start[1], end[1], p, f)
+                    noise_h = self.get_horizontal_noise(start[1], end[1], p, f,
+                                                        n_knots=n_knots)
+                    noise_v = self.get_vertical_noise(start[1], end[1], p, f,
+                                                      n_knots=n_knots)
                 if p == 600:
                     noise_h = self.get_horizontal_noise(
                         start[1],
                         end[1], p, f,
                         wstart=1682.5,
-                        wend=1702.5)
+                        wend=1702.5,
+                        n_knots=n_knots)
                     noise_v = self.get_vertical_noise(
                         start[1],
                         end[1], p, f,
                         wstart=1682.5,
-                        wend=1702.5)
+                        wend=1702.5,
+                        n_knots=n_knots)
                 noise_c = self.get_clean_noise(p, f)
                 noise_s = self.get_single_point_noise(p, f)
                 snr_h = signal[-1] / noise_h[1]
