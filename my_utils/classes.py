@@ -534,6 +534,15 @@ class CEPAS_benchmark():
 
             # print(self.spectra.spectra_list)
 
+    def add_magnitude(self):
+        """
+        Takes `H2_pnorm` and `H3_pnorm` colums \
+        and returns root of quadrature of those. \
+        Think of it as a magnitude of complex number
+        """
+        for s in self.spectra.spectra_list:
+            s["magnitude_pnorm"] = np.sqrt(s["H2_pnorm"]**2 + s["H3_pnorm"]**2)
+
     def get_avg(self) -> pd.DataFrame:
         """
         Get the avg of three benchmark spectra
@@ -683,7 +692,7 @@ class CEPAS_noise_info():
             n (int): optional, choose specific session of \
             noise spectra measrement
         """
-        
+
         if n is not None:
 
             re_str = dir_match(
