@@ -834,7 +834,8 @@ class CEPAS_SNR_bench():
                    end: int | float,
                    pressure: int | str | float,
                    frequency: int | str | float,
-                   n_knots: int = 11) -> Tuple[
+                   n_knots: int = 11,
+                   coly: str = "H2_pnorm",) -> Tuple[
                        pd.DataFrame,
                        str,
                        pd.DataFrame,
@@ -858,16 +859,32 @@ class CEPAS_SNR_bench():
                 `CEPAS_benchmark.get_spline_of_window()` docstring
 
         """
-        bench = self.make_bench(pressure, frequency)
-        peak_start = start
-        peak_end = end
-        peak_spline = bench.get_spline_of_window(
-            n_spectrum=-1,
-            n_knots=n_knots,
-            start=peak_start,
-            end=peak_end
-            )
-        return peak_spline
+        try:
+            bench = self.make_bench(pressure, frequency)
+            peak_start = start
+            peak_end = end
+            peak_spline = bench.get_spline_of_window(
+                n_spectrum=-1,
+                n_knots=n_knots,
+                start=peak_start,
+                end=peak_end,
+                coly=coly
+                )
+            return peak_spline
+        except KeyError as e:
+            print(f"{e}\n, but now added the missing column")
+            bench = self.make_bench(pressure, frequency)
+            bench.add_magnitude()
+            peak_start = start
+            peak_end = end
+            peak_spline = bench.get_spline_of_window(
+                n_spectrum=-1,
+                n_knots=n_knots,
+                start=peak_start,
+                end=peak_end,
+                coly=coly
+                )
+            return peak_spline
 
     def get_horizontal_noise(self,
                              start: int | float,
@@ -1097,3 +1114,66 @@ class CEPAS_SNR_bench():
                     noise_dict[p][f].append(float(n[1]))
 
         return pd.DataFrame(snr_dict), pd.DataFrame(noise_dict)
+
+    def get_mag_snrs(self,
+                     start: int | float,
+                     end: int | float,
+                     n_knots: int = 10,
+                     signal_col: str = "magnitude_pnorm") -> Tuple[
+                         pd.DataFrame,
+                         pd.DataFrame,
+                         pd.DataFrame
+                         ]:
+        """
+        Creates the final report for barplots of signal/noise/SNR \
+        for magnitude spectra
+
+        Args:
+            start (int|float): peak start \
+            start
+            end (int|float): peak end
+            n_knots (int): for backend splines, adjust if necessary, default=10
+            signal_col (str): usually magnitude here
+
+        Returns:
+            (Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]): df based on \
+                SNR dict and noise dict, and signal dict \
+                which organizes final data by pressure and modulation frequency
+        """
+        snr_dict = {}
+        noise_dict = {}
+        signal_dict = {}
+
+        for p in self.snr_dict.keys():
+            snr_dict[p] = {}
+            noise_dict[p] = {}
+            signal_dict[p] = {}
+            for f in self.snr_dict[p].keys():
+                snr_dict[p][f] = []
+                noise_dict[p][f] = []
+                signal_dict[p][f] = []
+                signal = self.get_signal(start,
+                                         end,
+                                         p, f,
+                                         n_knots=n_knots,
+                                         coly=signal_col)
+
+                noise_c = self.get_clean_noise(p, f)
+                noise_s = self.get_single_point_noise(p, f)
+                snr_s = signal[-1] / noise_s[1]
+                snr_c = signal[-1] / noise_c[1]
+
+                print(
+                    f"DEBUG: At p={p} \
+                        and f={f} signal is \n---->{signal[-1]}<----\n")
+                print(f"noise from single measurements: {noise_s[1]}")
+
+                for snr in [snr_s, snr_c]:
+                    snr_dict[p][f].append(float(snr.iloc[0]))  # type: ignore
+                for n in [noise_s, noise_c]:
+                    noise_dict[p][f].append(float(n[1]))
+                signal_dict[p][f].append(signal[-1])
+
+        return (pd.DataFrame(snr_dict),
+                pd.DataFrame(noise_dict),
+                pd.DataFrame(signal_dict))
