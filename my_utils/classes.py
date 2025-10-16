@@ -730,7 +730,8 @@ class CEPAS_noise_info():
 
     def get_noise_at(self,
                      frequency: int | str | float,
-                     buffer: int | float = 2) -> float:
+                     buffer: int | float = 2,
+                     h: int = 2) -> float:
         """
         Get the system background at the specified frequency.
         Pressure is set upon making initiating the object.
@@ -740,14 +741,15 @@ class CEPAS_noise_info():
                 system background signal?
             buffer (int | float): What should \
                 be the averaging range (+/- buffer)
-            m (int | None): What should be the
+            h (int | None): What is the harmonic used \
+                for signal measurements (default=2)
 
         Returns:
             (float): gives some value at
         """
         # Ensure frequency is a float for arithmetic
         try:
-            frequency = float(frequency)
+            frequency = float(frequency)*h
         except Exception:
             raise ValueError(
                 f"Frequency must be convertible to float, \
@@ -1032,8 +1034,10 @@ class CEPAS_SNR_bench():
             n=self.noise_number).get_noise_at(frequency=frequency)
 
     def get_all_snrs(self,
+                     
                      start: List[int | float],
                      end: List[int | float],
+                     h: int = 2,
                      n_knots: int = 10) -> Tuple[
                          pd.DataFrame,
                          pd.DataFrame
@@ -1045,6 +1049,7 @@ class CEPAS_SNR_bench():
             start (List[int|float]): List of two items, peak start and noise \
             start
             end (List[int|float]): List of two items, peak end and noise end
+            h (int): harmonic used
             n_knots (int): for backend splines, adjust if necessary, default=10
 
         Returns:
@@ -1058,8 +1063,8 @@ class CEPAS_SNR_bench():
             snr_dict[p] = {}
             noise_dict[p] = {}
             for f in self.snr_dict[p].keys():
-                snr_dict[p][f] = []
-                noise_dict[p][f] = []
+                snr_dict[p][f*h] = []
+                noise_dict[p][f*h] = []
                 signal = self.get_signal(start[0],
                                          end[0],
                                          p, f,
@@ -1109,9 +1114,9 @@ class CEPAS_SNR_bench():
                 print(f"noise from single measurements: {noise_s[1]}")
 
                 for snr in [snr_h, snr_v, snr_s, snr_c]:
-                    snr_dict[p][f].append(float(snr.iloc[0]))
+                    snr_dict[p][f*h].append(float(snr.iloc[0]))
                 for n in [noise_h, noise_v, noise_s, noise_c]:
-                    noise_dict[p][f].append(float(n[1]))
+                    noise_dict[p][f*h].append(float(n[1]))
 
         return pd.DataFrame(snr_dict), pd.DataFrame(noise_dict)
 
@@ -1119,6 +1124,7 @@ class CEPAS_SNR_bench():
                      start: int | float,
                      end: int | float,
                      n_knots: int = 10,
+                     h: int = 2,
                      signal_col: str = "magnitude_pnorm") -> Tuple[
                          pd.DataFrame,
                          pd.DataFrame,
@@ -1133,6 +1139,7 @@ class CEPAS_SNR_bench():
             start
             end (int|float): peak end
             n_knots (int): for backend splines, adjust if necessary, default=10
+            h (int): harmonic used
             signal_col (str): usually magnitude here
 
         Returns:
@@ -1149,9 +1156,9 @@ class CEPAS_SNR_bench():
             noise_dict[p] = {}
             signal_dict[p] = {}
             for f in self.snr_dict[p].keys():
-                snr_dict[p][f] = []
-                noise_dict[p][f] = []
-                signal_dict[p][f] = []
+                snr_dict[p][f*h] = []
+                noise_dict[p][f*h] = []
+                signal_dict[p][f*h] = []
                 signal = self.get_signal(start,
                                          end,
                                          p, f,
@@ -1169,10 +1176,10 @@ class CEPAS_SNR_bench():
                 print(f"noise from single measurements: {noise_s[1]}")
 
                 for snr in [snr_s, snr_c]:
-                    snr_dict[p][f].append(float(snr.iloc[0]))  # type: ignore
+                    snr_dict[p][f*h].append(float(snr.iloc[0]))  # type: ignore
                 for n in [noise_s, noise_c]:
-                    noise_dict[p][f].append(float(n[1]))
-                signal_dict[p][f].append(signal[-1])
+                    noise_dict[p][f*h].append(float(n[1]))
+                signal_dict[p][f*h].append(signal[-1])
 
         return (pd.DataFrame(snr_dict),
                 pd.DataFrame(noise_dict),
