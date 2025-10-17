@@ -170,7 +170,8 @@ def dir_match_dict(path: str,
 
 
 def create_regex_strings(list1: List[int],
-                         list2: List[int]) -> \
+                         list2: List[int],
+                         f: str = "gasx") -> \
                             Dict[int | str | float,
                                  Dict[int | str | float,
                                       Pattern[str]]]:
@@ -181,6 +182,7 @@ def create_regex_strings(list1: List[int],
     Args:
         list1 (List[int]): List, e.g. of pressures
         list2 (List[int]): List, e.g. of frequencies
+        f (str): name flag, default "gasx"
 
     Returns:
         List[str]: The generated list of strings, to use wherever
@@ -192,7 +194,7 @@ def create_regex_strings(list1: List[int],
         patterns[l1] = {}
         for l2 in list2:
             current_string = re.compile(
-                f"gasx_{l1}_(12|24|32)_{l2}__msr__[0-9]{{1,2}}"
+                f"{f}_{l1}_(12|24|32)_{l2}__msr__[0-9]{{1,2}}"
                 )
             patterns[l1][l2] = current_string
     return patterns
