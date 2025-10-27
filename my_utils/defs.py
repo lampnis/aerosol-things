@@ -11,6 +11,7 @@ import numpy as np
 
 # viz libs
 import matplotlib.pyplot as plt
+import matplotlib.path as mpath
 
 # scipy
 from scipy.special import voigt_profile
@@ -50,6 +51,32 @@ col_names = {
 
 def hello_test():
     print("Hello!")
+
+
+def create_masks(grid: Tuple[np.ndarray, np.ndarray],
+                 verts: List[Tuple[float, float]]) \
+                -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Create two masks for the `grid`: \
+        one for everything inside the the closed path of `verts`,
+        and another one for everything outside of the path
+
+    Args:
+        grid (Tuple[np.ndarray, np.ndarray]): Two `np.meshgrid()`s for \
+            the superset that the masks should work on
+        verts (List[Tuple[float, float]]): Pairs of `(x, y)` coordinates, \
+            which will form the closed path
+
+    Returns:
+        (Tuple[np.ndarray, np.ndarray]): first used, to access/change \
+            inside points of `grid`, second to access/change the outside points
+    """
+    path = mpath.Path(verts)
+    points = np.vstack((grid[0].flatten(), grid[1].flatten())).T
+    inside_mask_path = path.contains_points(points)
+    inside_mask_path = inside_mask_path.reshape(grid[0].shape)
+    outside_mask_path = ~inside_mask_path
+    return inside_mask_path, outside_mask_path
 
 
 def phase_correct(df: pd.DataFrame,
