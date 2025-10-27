@@ -12,6 +12,7 @@ import numpy as np
 # viz libs
 import matplotlib.pyplot as plt
 import matplotlib.path as mpath
+from matplotlib import axes
 
 # scipy
 from scipy.special import voigt_profile
@@ -51,6 +52,66 @@ col_names = {
 
 def hello_test():
     print("Hello!")
+
+
+def draw_points(coords: Dict[str, List[float | int]],
+                x_mesh: np.ndarray,
+                y_mesh: np.ndarray,
+                bound_0: int | float,
+                bound_1: int | float,
+                n_points: int,
+                ax: axes.Axis.axis):  # type: ignore  # noqa: F821
+    """
+    Draws points on given `ax`
+
+    Args:
+        coords (Dict[str, List[float|int]]): dictionary containing 3d coords \
+            lists with keys `'x'`, '`y`', '`z`'.
+        ax (plt.axes.Axes): where to draw, default is `ax1`
+    """
+    keys = list(coords.keys())
+    for i in range(len(coords[keys[0]])):
+        ax.scatter(coords['x'][i],
+                   coords['y'][i],
+                   coords['z'][i],
+                   marker="o", color="red",
+                   s=100, alpha=1.0, zorder=8)  # type: ignore
+        ax.plot3D([coords['x'][i] for _ in range(10)],
+                  [coords['y'][i] for _ in range(10)],
+                  np.linspace(bound_0, bound_1, 10),
+                  color="red", zorder=6)
+        ax.plot3D(x_mesh,
+                  [coords['y'][i] for _ in range(n_points)],
+                  [coords['z'][i] for _ in range(n_points)],
+                  color="red", zorder=7)
+        ax.plot3D([coords['x'][i] for _ in range(n_points)],
+                  y_mesh,
+                  [coords['z'][i] for _ in range(n_points)],
+                  color="red", zorder=7)
+
+
+def add_point(coords: Dict[str, List[float | int]],
+              point: List[float | int],
+              dims: int = 3) -> None:
+    """
+    You will have a dictionary of coordinates with keys being names \
+        of dimensions, of which by default there will be three. \
+            This function adds to that dict an n-dimensional point, \
+                that can later be used from that `coords` dict for \
+                    plotting etc.
+
+    Args:
+        coords (Dict[str, float]): dictionary of signature {'n': coord...}
+        point (List[float]): n-dimensional point / list \
+            of coords [x, y, z, ... n]
+        dims (int): just a number of dimensions, in most cases unchanged and \
+            will stay =3
+
+    Returns:
+        (None): but updates the coords dictionary
+    """
+    for l, coord in zip(coords.values(), point):  # noqa: E741
+        l.append(coord)
 
 
 def create_masks(grid: Tuple[np.ndarray, np.ndarray],
