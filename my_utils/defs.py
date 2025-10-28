@@ -60,7 +60,7 @@ def draw_points(coords: Dict[str, List[float | int]],
                 bound_0: int | float,
                 bound_1: int | float,
                 n_points: int,
-                ax: axes.Axis.axis):  # type: ignore  # noqa: F821
+                ax: axes.Axes.axes):  # type: ignore  # noqa: F821
     """
     Draws points on given `ax`
 
