@@ -1,3 +1,12 @@
+# Key Context Files for Our Collaboration
+
+- **`GEMINI.md` (This file):** My primary instructions, project overview, and our agreed-upon working style.
+- **`WORKLOG.md`:** A detailed, summarized log of the project's technical progress, generated from `notes.txt`.
+- **`SESSIONS.md`:** A high-level log of our chat sessions and what we accomplished in each one.
+- **`notes.txt`:** Your raw, handwritten notes that serve as the source for `WORKLOG.md`.
+In the beginning of each session, check these files and `git log`, to get up to speed
+---
+
 # GEMINI Project Context: Aerosol Data Analysis
 
 This document provides context for the Gemini-CLI assistant to effectively help with this project.
