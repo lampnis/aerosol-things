@@ -1,10 +1,44 @@
 # Key Context Files for Our Collaboration
 
+All the following files are located in `additional-context/`!
 - **`GEMINI.md` (This file):** My primary instructions, project overview, and our agreed-upon working style.
 - **`WORKLOG.md`:** A detailed, summarized log of the project's technical progress, generated from `notes.txt`.
 - **`SESSIONS.md`:** A high-level log of our chat sessions and what we accomplished in each one.
 - **`notes.txt`:** Your raw, handwritten notes that serve as the source for `WORKLOG.md`.
+- **`TREE.md`:** A snapshot of the project's directory structure, updated at the beginning and end of each session.
 In the beginning of each session, check these files and `git log`, to get up to speed
+
+## 6. Startup Routine
+
+At the beginning of each session, you should perform the following steps to get up to speed and ensure consistency:
+
+1.  **Update Project Tree:** Generate the latest project directory tree and save it to `additional-context/TREE.md`.
+    ```bash
+    ls -R /home/labuser/aerosol-things > /home/labuser/aerosol-things/additional-context/TREE.md
+    ```
+2.  **Review READMEs:** Read all `README.md` files in the project to understand the context of different directories.
+    ```bash
+    find /home/labuser/aerosol-things -name "README.md" -exec cat {} +
+    ```
+3.  **Review Worklog:** Read the `additional-context/WORKLOG.md` to catch up on the latest technical progress.
+    ```bash
+    cat /home/labuser/aerosol-things/additional-context/WORKLOG.md
+    ```
+4.  **Review Session Log:** Read the `additional-context/SESSIONS.md` to understand the high-level accomplishments of previous sessions.
+    ```bash
+    cat /home/labuser/aerosol-things/additional-context/SESSIONS.md
+    ```
+5.  **Review Git Log:** Check the recent commit history for any changes not yet reflected in the logs.
+    ```bash
+    git log -n 5
+    ```
+6.  **Compare and Identify Discrepancies:** Manually compare the generated `TREE.md` and the contents of `README.md` files with the `WORKLOG.md` and `SESSIONS.md` to identify any discrepancies or areas that need updating. This helps in understanding the current state of the project and what was accomplished.
+
+At the end of each session (if no crash occurred), you should update `additional-context/TREE.md` again to reflect any changes made during the session.
+    ```bash
+    ls -R /home/labuser/aerosol-things > /home/labuser/aerosol-things/additional-context/TREE.md
+    ```
+
 ---
 
 # GEMINI Project Context: Aerosol Data Analysis
