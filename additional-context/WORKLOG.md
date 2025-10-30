@@ -874,3 +874,19 @@ DONE: Copied in labview all necessary things. Left to test.
 TODO: multi-freq test for open-cell cell.
 ```
 </details>
+
+## 2025-10-30
+
+**Summary:** With TED200C set to 11.448 kOhm, the chosen range for the frequency sweep is 1420-1510 in LabView decimal units. The pressure is atmospheric but will be recorded as 900 mbar in filenames. The possibility of adding `README.md` files to the root and subdirectories for better navigation and understanding, with Gemini deducing data types based on commit dates and `notes.txt`, was also considered.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+30.10.2025
+With TED200C set to 11.448 kOhm, chosen range is 1420-1510 in labview decimal units. Doing the freq sweep for the line in that
+'offsets' range. Pressure is atmospheric but in filenames it will be 900 mbar!! Note that! Could add the overview README.md in root
+directory and also in subdirectories, could try to let gemini deduce what kind of data is there in each of those, based on last
+commit dates and `notes.txt` file (this file).
+```
+</details>

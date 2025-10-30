@@ -8,6 +8,7 @@ aislop.ipynb
 algebra.ipynb
 codes
 my_utils
+notes.txt
 stats_useful.ipynb
 tox.ini
 
@@ -870,6 +871,9 @@ initial-tests
 
 /home/labuser/aerosol-things/codes/datas/misc_tests/open-cell/initial-tests:
 README.md
+hapi_data
+nb.ipynb
+noise-tests
 open_900_32_130__msr__15
 open_900_32_130__msr__16
 open_900_32_130__msr__17
@@ -897,6 +901,11 @@ open_900_32_80__msr__9
 open_900_32_90__msr__12
 open_900_32_90__msr__13
 open_900_32_90__msr__14
+
+/home/labuser/aerosol-things/codes/datas/misc_tests/open-cell/initial-tests/hapi_data:
+
+/home/labuser/aerosol-things/codes/datas/misc_tests/open-cell/initial-tests/noise-tests:
+Spectrum_open.txt
 
 /home/labuser/aerosol-things/codes/datas/noise_tests:
 spectrum_20082025
