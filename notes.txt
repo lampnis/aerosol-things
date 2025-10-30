@@ -1,4 +1,4 @@
-b# LAB NOTES
+# LAB NOTES
 
 ## Testing the leaks
 
@@ -524,4 +524,11 @@ Adjusted interferogram for now for old og cantilever
 29.10.2025
 DONE: Make backup for n_gasx routine for labview test prog. (filename "KT008_TH11 test progrm_backup_n_gasx.vi")
 DONE: Copied in labview all necessary things. Left to test.
-TODO: multi-freq test for open-cell cell. 
+TODO: multi-freq test for open-cell cell.
+
+
+30.10.2025
+With TED200C set to 11.448 kOhm, chosen range is 1420-1510 in labview decimal units. Doing the freq sweep for the line in that
+'offsets' range. Pressure is atmospheric but in filenames it will be 900 mbar!! Note that! Could add the overview README.md in root
+directory and also in subdirectories, could try to let gemini deduce what kind of data is there in each of those, based on last
+commit dates and `notes.txt` file (this file).
