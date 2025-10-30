@@ -688,7 +688,7 @@ class CEPAS_noise_info():
 
     def __init__(self,
                  path: str,
-                 pressure: int | str | float,
+                 pressure: int | str | float='',
                  n: int | None = None):
         """
         Initiate the noise info. If there are multiple \
@@ -697,7 +697,8 @@ class CEPAS_noise_info():
 
         Args:
             path (str): where the noise spectra are located
-            pressure (int | str | float): which pressure
+            pressure (int | str | float): which pressure, \
+                default is an empty string
             n (int): optional, choose specific session of \
             noise spectra measrement
         """
@@ -807,7 +808,8 @@ class CEPAS_SNR_bench():
         bench_test = CEPAS_benchmark(
             self.bench_path,
             self.bench_files,
-            pressure, frequency
+            pressure, frequency,
+            file_signature=self.file_sig
             )
         return bench_test
 
@@ -1125,7 +1127,8 @@ class CEPAS_SNR_bench():
                      end: int | float,
                      n_knots: int = 10,
                      h: int = 2,
-                     signal_col: str = "magnitude_pnorm") -> Tuple[
+                     signal_col: str = "magnitude_pnorm",
+                     skip_single: bool = False) -> Tuple[
                          pd.DataFrame,
                          pd.DataFrame,
                          pd.DataFrame
@@ -1141,6 +1144,8 @@ class CEPAS_SNR_bench():
             n_knots (int): for backend splines, adjust if necessary, default=10
             h (int): harmonic used
             signal_col (str): usually magnitude here
+            skip_single (bool): default false, toggle if there are no single point \
+                measurements
 
         Returns:
             (Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]): df based on \
@@ -1165,21 +1170,41 @@ class CEPAS_SNR_bench():
                                          n_knots=n_knots,
                                          coly=signal_col)
 
-                noise_c = self.get_clean_noise(p, f)
-                noise_s = self.get_single_point_noise(p, f)
-                snr_s = signal[-1] / noise_s[1]
+                try:
+                    noise_c = self.get_clean_noise(p, f)
+                except IndexError as e:
+                    noise_c = self.get_clean_noise('', f)
+                    print(f"Replaced pressure in clean noise file \
+                          name with empty string, {e}")
                 snr_c = signal[-1] / noise_c[1]
+                
+                # ensure variables are always defined to satisfy static analysis
+                noise_s = None
+                snr_s = None
+                if not skip_single:
+                    noise_s = self.get_single_point_noise(p, f)
+                    snr_s = signal[-1] / noise_s[1]
 
                 print(
                     f"DEBUG: At p={p} \
                         and f={f} signal is \n---->{signal[-1]}<----\n")
-                print(f"noise from single measurements: {noise_s[1]}")
+                if not skip_single and noise_s is not None:
+                    print(f"noise from single measurements: {noise_s[1]}")
+                else:
+                    print("!No single point measurements this time!")
 
-                for snr in [snr_s, snr_c]:
-                    snr_dict[p][f*h].append(float(snr.iloc[0]))  # type: ignore
-                for n in [noise_s, noise_c]:
-                    noise_dict[p][f*h].append(float(n[1]))
-                signal_dict[p][f*h].append(signal[-1])
+                if not skip_single:
+                    for snr in [snr_s, snr_c]:
+                        snr_dict[p][f*h].append(float(snr.iloc[0]))  # type: ignore
+                    for n in [noise_s, noise_c]:
+                        noise_dict[p][f*h].append(float(n[1]))
+                    signal_dict[p][f*h].append(signal[-1])
+                else:
+                    for snr in [snr_c]:
+                        snr_dict[p][f*h].append(float(snr.iloc[0]))  # type: ignore
+                    for n in [noise_c]:
+                        noise_dict[p][f*h].append(float(n[1]))
+                    signal_dict[p][f*h].append(signal[-1])
 
         return (pd.DataFrame(snr_dict),
                 pd.DataFrame(noise_dict),
