@@ -4,11 +4,13 @@ All the following files are located in `additional-context/`!
 - **`GEMINI.md` (This file):** My primary instructions, project overview, and our agreed-upon working style.
 - **`WORKLOG.md`:** A detailed, summarized log of the project's technical progress, generated from `notes.txt`.
 - **`SESSIONS.md`:** A high-level log of our chat sessions and what we accomplished in each one.
-- **`notes.txt`:** Your raw, handwritten notes that serve as the source for `WORKLOG.md`.
 - **`TREE.md`:** A snapshot of the project's directory structure, updated at the beginning and end of each session.
 In the beginning of each session, check these files and `git log`, to get up to speed
 
-## 6. Startup Routine
+To update the `WORKLOG.md`, look in the root directory of the project for a file:
+- **`notes.txt`:** Your raw, handwritten notes that serve as the source for `WORKLOG.md`.
+
+## 0. Startup Routine
 
 At the beginning of each session, you should perform the following steps to get up to speed and ensure consistency:
 
