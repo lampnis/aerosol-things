@@ -505,7 +505,7 @@ class CEPAS_benchmark():
         self.noise_flag = noise_flag
 
         # workaround for uneven spectra
-        if not self.noise_flag:
+        if not self.noise_flag and len(self.spectra.spectra_list) > 1:
             neq_12 = len(self.spectra.spectra_list[0]) != \
                 len(self.spectra.spectra_list[1])
             neq_23 = len(self.spectra.spectra_list[1]) != \

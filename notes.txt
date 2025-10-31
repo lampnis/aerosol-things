@@ -534,3 +534,7 @@ directory and also in subdirectories, could try to let gemini deduce what kind o
 commit dates and `notes.txt` file (this file). Note old range for current offsets in hex are (3E8 - 6D6). For the line will use
 1420-1510 (decimal)
 Created the notebook for opencell cell initial test.
+
+31.10.2025
+Doing the freq sweep 20-190 for oc cell with Helmholtz filter, to see the effects, first harmonic 20-190 Hz with steps of 10
+(for 2nd harmonic it means 40-380 w/ steps of 20 Hz). Idk, for me it seems like the filter worked, especially if the frequency for it was somewhere around 130 Hz (260 Hz in barcharts looks the best).
