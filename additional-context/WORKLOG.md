@@ -877,7 +877,7 @@ TODO: multi-freq test for open-cell cell.
 
 ## 2025-10-30
 
-**Summary:** With TED200C set to 11.448 kOhm, the chosen range for the frequency sweep is 1420-1510 in LabView decimal units. The pressure is atmospheric but will be recorded as 900 mbar in filenames. The possibility of adding `README.md` files to the root and subdirectories for better navigation and understanding, with Gemini deducing data types based on commit dates and `notes.txt`, was also considered.
+**Summary:** With TED200C set to 11.448 kOhm, the chosen range for the frequency sweep is 1420-1510 in LabView decimal units. The pressure is atmospheric but will be recorded as 900 mbar in filenames. The possibility of adding `README.md` files to the root and subdirectories for better navigation and understanding, with Gemini deducing data types based on commit dates and `notes.txt`, was also considered. A notebook for the open-cell initial test was created.
 
 <details>
 <summary>Original Notes</summary>
@@ -887,6 +887,22 @@ TODO: multi-freq test for open-cell cell.
 With TED200C set to 11.448 kOhm, chosen range is 1420-1510 in labview decimal units. Doing the freq sweep for the line in that
 'offsets' range. Pressure is atmospheric but in filenames it will be 900 mbar!! Note that! Could add the overview README.md in root
 directory and also in subdirectories, could try to let gemini deduce what kind of data is there in each of those, based on last
-commit dates and `notes.txt` file (this file).
+commit dates and `notes.txt` file (this file). Note old range for current offsets in hex are (3E8 - 6D6). For the line will use
+1420-1510 (decimal)
+Created the notebook for opencell cell initial test.
+```
+</details>
+
+## 2025-10-31
+
+**Summary:** A frequency sweep from 20-190 Hz (1st harmonic) was performed on the open-cell setup with a Helmholtz filter to observe its effects. The results suggest the filter was effective, particularly around 130 Hz (260 Hz 2nd harmonic).
+
+<details>
+<summary>Original Notes</summary>
+
+```
+31.10.2025
+Doing the freq sweep 20-190 for oc cell with Helmholtz filter, to see the effects, first harmonic 20-190 Hz with steps of 10
+(for 2nd harmonic it means 40-380 w/ steps of 20 Hz). Idk, for me it seems like the filter worked, especially if the frequency for it was somewhere around 130 Hz (260 Hz in barcharts looks the best).
 ```
 </details>
