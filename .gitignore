@@ -1,2 +1,6 @@
-
+codes/hapi_data/
 node_modules/
+data/
+my_utils/__pycache__
+package-lock.json
+package.json
