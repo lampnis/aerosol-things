@@ -517,6 +517,7 @@ R5C3 do 20(40), 30(60), 40(80) Hz measurement!! Reminded about 2ND harmonic!!!
 Will send away the cantilevers;
 put back inside old one but not yet readjusted interferometer or anything, just had it put inside
 
+
 27.10.2025
 Adjusted interferogram for now for old og cantilever
 
@@ -535,6 +536,13 @@ commit dates and `notes.txt` file (this file). Note old range for current offset
 1420-1510 (decimal)
 Created the notebook for opencell cell initial test.
 
+
 31.10.2025
 Doing the freq sweep 20-190 for oc cell with Helmholtz filter, to see the effects, first harmonic 20-190 Hz with steps of 10
 (for 2nd harmonic it means 40-380 w/ steps of 20 Hz). Idk, for me it seems like the filter worked, especially if the frequency for it was somewhere around 130 Hz (260 Hz in barcharts looks the best).
+
+
+03.11.2025
+Swapped to larger helmoltz resonator, did the same measurement sweep as previously (40-380 2nd harmonic freq range). Need to start
+to think more in detail about Helmholtz resonator modelling for the filter action prediction (what will be the bandpass/bandgain
+behaviour, account for the changes in neck diameters, difference between cell opening/neck diameters etc.)

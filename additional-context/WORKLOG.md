@@ -906,3 +906,18 @@ Doing the freq sweep 20-190 for oc cell with Helmholtz filter, to see the effect
 (for 2nd harmonic it means 40-380 w/ steps of 20 Hz). Idk, for me it seems like the filter worked, especially if the frequency for it was somewhere around 130 Hz (260 Hz in barcharts looks the best).
 ```
 </details>
+
+## 2025-11-03
+
+**Summary:** The Helmholtz resonator was swapped to a larger one, and the same measurement sweep (40-380 Hz 2nd harmonic) was performed. Further detailed modeling of the Helmholtz resonator's filter action, including bandpass/bandgain behavior and the effects of neck/cell opening diameters, is needed.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+03.11.2025
+Swapped to larger helmoltz resonator, did the same measurement sweep as previously (40-380 2nd harmonic freq range). Need to start
+to think more in detail about Helmholtz resonator modelling for the filter action prediction (what will be the bandpass/bandgain
+behaviour, account for the changes in neck diameters, difference between cell opening/neck diameters etc.)
+```
+</details>
