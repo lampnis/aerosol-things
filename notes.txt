@@ -546,3 +546,10 @@ Doing the freq sweep 20-190 for oc cell with Helmholtz filter, to see the effect
 Swapped to larger helmoltz resonator, did the same measurement sweep as previously (40-380 2nd harmonic freq range). Need to start
 to think more in detail about Helmholtz resonator modelling for the filter action prediction (what will be the bandpass/bandgain
 behaviour, account for the changes in neck diameters, difference between cell opening/neck diameters etc.)
+
+
+06.11.2025
+* 3d printed the harnesses for the new big valves, attached to CEPAS cell
+* added needle valves and new big electronic valves to cell setup, tested the noise spectrum (see .opj on desktop, not in this repo)
+* DOING: Testing the flow rate with lee pump and flow-meter (disconnected yellow cable (picoscope)
+note: When connecting lee pump, usb6008 board seems to reconnect and labview control for usb6008 crashes/need restart.
