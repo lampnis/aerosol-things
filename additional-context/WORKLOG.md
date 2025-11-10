@@ -921,3 +921,38 @@ to think more in detail about Helmholtz resonator modelling for the filter actio
 behaviour, account for the changes in neck diameters, difference between cell opening/neck diameters etc.)
 ```
 </details>
+
+## 2025-11-06
+
+**Summary:** New harnesses for big valves were 3D printed and attached to the CEPAS cell. Needle valves and new big electronic valves were added to the cell setup, and the noise spectrum was tested. The flow rate with a lee pump and flow-meter was being tested, noting that connecting the lee pump causes the USB6008 board to reconnect and the LabView control to crash/restart.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+06.11.2025
+* 3d printed the harnesses for the new big valves, attached to CEPAS cell
+* added needle valves and new big electronic valves to cell setup, tested the noise spectrum (see .opj on desktop, not in this repo)
+* DOING: Testing the flow rate with lee pump and flow-meter (disconnected yellow cable (picoscope)
+note: When connecting lee pump, usb6008 board seems to reconnect and labview control for usb6008 crashes/need restart.
+```
+</details>
+
+## 2025-11-10
+
+**Summary:** The procedure for testing the maximum available flow rate with a disconnected balancing volume was performed. The test involved observing noise increase and needle valve opening with big valves closed, then noting the flow rate with big valves open. Results showed a very low threshold for noise increase, with `n=1` turns of the needle valve being the last safe integer turn. At `n=2` turns, noise increased dramatically. Fine-tuning between `n=1` and `n=2` revealed that noise increases very soon after `n=1` turns, so it was left at `n=1`. With the flowmeter on, `n=1` turns were insufficient to detect >= 0.01 l/min flow, but `n=2` turns allowed for a minimal flow readout of 0.01 l/min.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+10.11.2025
+* DOING: (still) procedure for testing the max available flow rate with disconnected balancing volume:
+	1) See the moment of large noise increase and the amount of needle valve opening with the big valves closed.
+	2) Open big valves, note down the flow rate (l/min)
+* RESULTS: did the test. Marked down the closed position with a marker, and did consecutive integer 360 turns of the 
+needle valve. Seems like threshold is very low as expected, and last safe integer turns were n=1 turns. Noise is virtually
+the same as for closed needle valves. Then, at n=2 turns, the noise increases dramatically. Tried to finetune where is the best position between n=1 and n=2, but concluded, that very soon after the integer n=1 turns, the noise starts to
+increase, so we leave it at n=1. When the flowmeter is on, the last optimal needle valve position is not sufficient to detect >= 0.01 l/min flow. With n=2 turns, the minimal flow readout is possible (0.01 l/min)
+```
+</details>
