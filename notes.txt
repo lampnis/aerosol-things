@@ -553,3 +553,13 @@ behaviour, account for the changes in neck diameters, difference between cell op
 * added needle valves and new big electronic valves to cell setup, tested the noise spectrum (see .opj on desktop, not in this repo)
 * DOING: Testing the flow rate with lee pump and flow-meter (disconnected yellow cable (picoscope)
 note: When connecting lee pump, usb6008 board seems to reconnect and labview control for usb6008 crashes/need restart.
+
+
+10.11.2025
+* DOING: (still) procedure for testing the max available flow rate with disconnected balancing volume:
+	1) See the moment of large noise increase and the amount of needle valve opening with the big valves closed.
+	2) Open big valves, note down the flow rate (l/min)
+* RESULTS: did the test. Marked down the closed position with a marker, and did consecutive integer 360 turns of the 
+needle valve. Seems like threshold is very low as expected, and last safe integer turns were n=1 turns. Noise is virtually
+the same as for closed needle valves. Then, at n=2 turns, the noise increases dramatically. Tried to finetune where is the best position between n=1 and n=2, but concluded, that very soon after the integer n=1 turns, the noise starts to
+increase, so we leave it at n=1. When the flowmeter is on, the last optimal needle valve position is not sufficient to detect >= 0.01 l/min flow. With n=2 turns, the minimal flow readout is possible (0.01 l/min)
