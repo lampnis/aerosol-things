@@ -563,3 +563,9 @@ note: When connecting lee pump, usb6008 board seems to reconnect and labview con
 needle valve. Seems like threshold is very low as expected, and last safe integer turns were n=1 turns. Noise is virtually
 the same as for closed needle valves. Then, at n=2 turns, the noise increases dramatically. Tried to finetune where is the best position between n=1 and n=2, but concluded, that very soon after the integer n=1 turns, the noise starts to
 increase, so we leave it at n=1. When the flowmeter is on, the last optimal needle valve position is not sufficient to detect >= 0.01 l/min flow. With n=2 turns, the minimal flow readout is possible (0.01 l/min)
+
+
+11.11.2025
+* At first, it seemed like the flow meter (usb6008 connected) shows negative value, but now it seems that it shows 
+positive, as it should. Not sure, what was the issue. Omron flowmeter shows +0.04 to +0.05 more l/min than TSI 4000 series flowmeter.
+* TODO: Think of flowmeter placements and the piping setup

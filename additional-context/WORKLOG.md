@@ -956,3 +956,18 @@ the same as for closed needle valves. Then, at n=2 turns, the noise increases dr
 increase, so we leave it at n=1. When the flowmeter is on, the last optimal needle valve position is not sufficient to detect >= 0.01 l/min flow. With n=2 turns, the minimal flow readout is possible (0.01 l/min)
 ```
 </details>
+
+## 2025-11-11
+
+**Summary:** The flow meter readings were initially negative but corrected to positive. A comparison with another flow meter showed a slight difference. The next step is to consider flowmeter placements and piping setup.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+11.11.2025
+* At first, it seemed like the flow meter (usb6008 connected) shows negative value, but now it seems that it shows 
+positive, as it should. Not sure, what was the issue. Omron flowmeter shows +0.04 to +0.05 more l/min than TSI 4000 series flowmeter.
+* TODO: Think of flowmeter placements and the piping setup
+```
+</details>
