@@ -569,3 +569,27 @@ increase, so we leave it at n=1. When the flowmeter is on, the last optimal need
 * At first, it seemed like the flow meter (usb6008 connected) shows negative value, but now it seems that it shows 
 positive, as it should. Not sure, what was the issue. Omron flowmeter shows +0.04 to +0.05 more l/min than TSI 4000 series flowmeter.
 * TODO: Think of flowmeter placements and the piping setup
+
+
+13.11.2025
+        ==>2==>
+       1   _   3
+       ^---|---_
+I==FM=>|  CELL |=PUMP=>O
+       |_______|
+
+* PUMP=50W
+* Adjusted flow (with closed bypass) to be 0.1 l/min (with bypass disconnected)
+* I=5, O=4
+* 2 must be adjusted to n=1
+!!! Currently time trace looks >> 1
+TODO: Finish the measurements of noise for fully opened bypass sides and balance valve 7-0. 7 already done.
+I, O = 5, 4 (like mentioned above!) DONE
+
+
+14.11.2025
+TODO: Integrals of noise: 0-30 and 40-65 Hz rang DONE
+
+
+14.11.2025
+TODO: Integrals of noise: 0-30 and 40-65 Hz range. Do the measurements with removed middle Flowmeter.
