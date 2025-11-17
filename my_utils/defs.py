@@ -54,6 +54,29 @@ def hello_test():
     print("Hello!")
 
 
+def integrate_range_of(df: pd.DataFrame,
+                       s: int | float,
+                       f: int | float,
+                       colx: int | str = "Frequency",
+                       coly: int | str = "Intensity") -> float:
+    """
+    Wrapper of `np.trapezoid` for integrating some range of 2d data.
+
+    Args:
+        s (int|float): start of the range (must be a point on x axis) \
+            (inclusive)
+        f (int|float): end of the range (must be a point on x axis) \
+            (inclusive)
+        colx (int|str): Index or name of col x
+        coly (int|str): Index or name of col y
+
+    Returns:
+        (float): The value of integral
+    """
+    df_slice = df[(df[colx] >= s) & (df[colx] <= f)]
+    return float(np.trapezoid(df_slice[coly], df_slice[colx]))
+
+
 def draw_points(coords: Dict[str, List[float | int]],
                 x_mesh: np.ndarray,
                 y_mesh: np.ndarray,
