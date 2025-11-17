@@ -145,6 +145,7 @@ class CEPAS_measurement():
             1: (40, 70),
             2: (150, 175)
         }
+
         # peak 1 idx 40-70
         self.peak1_start = self.peaks_starts_ends[1][0]
         self.peak1_end = self.peaks_starts_ends[1][1]
@@ -163,7 +164,8 @@ class CEPAS_measurement():
             self.spectra_list[i].loc[
                 self.peak1_start:self.peak1_end, :][
                     'H2_pnorm'].min() for i, _ in enumerate(self.spectra_list)]
-
+        # print(f"self spectra list is {self.spectra_list}")
+        # print(f"self.peak_1s_norm_mins is {self.peak_1s_norm_mins}")
         self.ylim_11 = np.array(self.peak_1s_norm_mins).min() - 0.1
         self.ylim_12 = np.array(self.peak_1s_norm).max() + 0.1
 
@@ -782,6 +784,12 @@ class CEPAS_SNR_bench():
         self.noise_path = noise_path
         self.noise_number = noise_number
         self.file_sig = file_sig
+    
+    def change_file_sig(self, new_file_sig: str) -> None:
+        """
+        changes the `file_sig` if necessary
+        """
+        self.file_sig = new_file_sig
 
     def set_noise_path(self, path: str) -> None:
         """
@@ -797,7 +805,8 @@ class CEPAS_SNR_bench():
 
     def make_bench(self,
                    pressure: int | str | float,
-                   frequency: int | str | float):
+                   frequency: int | str | float,
+                   file_sig: str = 'gasx') -> CEPAS_benchmark: # type: ignore # noqa: F821
         """
         Create a `CEPAS_benchmark` object for the chemical spectra
         """
@@ -805,12 +814,22 @@ class CEPAS_SNR_bench():
             raise ValueError("Please \
                              create a bench path using \
                              'object.set_bench_path(path)'")
-        bench_test = CEPAS_benchmark(
-            self.bench_path,
-            self.bench_files,
-            pressure, frequency,
-            file_signature=self.file_sig
-            )
+        try:
+            bench_test = CEPAS_benchmark(
+                self.bench_path,
+                self.bench_files,
+                pressure, frequency,
+                file_signature=self.file_sig
+                )
+        except ValueError as e:
+            print("Wrong filename, changed:")
+            print(f"'single'->'gasx', {e}")
+            bench_test = CEPAS_benchmark(
+                self.bench_path,
+                self.bench_files,
+                pressure, frequency,
+                file_signature=file_sig
+                )
         return bench_test
 
     def make_noise_bench(self,
@@ -864,7 +883,7 @@ class CEPAS_SNR_bench():
 
         """
         try:
-            bench = self.make_bench(pressure, frequency)
+            bench = self.make_bench(pressure, frequency, file_sig="gasx")
             peak_start = start
             peak_end = end
             peak_spline = bench.get_spline_of_window(
@@ -875,6 +894,7 @@ class CEPAS_SNR_bench():
                 coly=coly
                 )
             return peak_spline
+
         except KeyError as e:
             print(f"{e}\n, but now added the missing column")
             bench = self.make_bench(pressure, frequency)

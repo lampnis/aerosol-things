@@ -588,8 +588,10 @@ I, O = 5, 4 (like mentioned above!) DONE
 
 
 14.11.2025
-TODO: Integrals of noise: 0-30 and 40-65 Hz rang DONE
-
-
-14.11.2025
 TODO: Integrals of noise: 0-30 and 40-65 Hz range. Do the measurements with removed middle Flowmeter.
+
+
+17.11.2025
+DONE: in `my_utils/classes.py` did some changes for `CEPAS_SNR_bench.make_bench()` method, caught the error where problems
+with the filename were ('gasx'/'single' filename conventions...)
+TODO: See the previous two tasks
