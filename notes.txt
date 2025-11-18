@@ -595,3 +595,7 @@ TODO: Integrals of noise: 0-30 and 40-65 Hz range. Do the measurements with remo
 DONE: in `my_utils/classes.py` did some changes for `CEPAS_SNR_bench.make_bench()` method, caught the error where problems
 with the filename were ('gasx'/'single' filename conventions...)
 TODO: See the previous two tasks
+
+
+18.11.2025
+REDO: bypass5short

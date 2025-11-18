@@ -12,3 +12,6 @@ Bypass side needle valves turned to 'fully open' position
 
 ## Bypass = 5 short
 Short path, with second flowmeter to balance volume removed
+
+## Bypass = 5 short redo
+-"- but rechecking because there was doubt that cell needle valves may have been closed...
