@@ -601,5 +601,8 @@ TODO: See the previous two tasks
 REDO: bypass5short DONE
 
 
-19.11.2025
-Do the bypass5short_with filter, see what effect the filter has on the integrals
+19.11.2025 
+DONE: test with bigfilter
+DONE: test with additional volume to Cell side (7 ml cell ~ 7 ml balance)
+DONE: w/ and w/o the closed output side of the cell, to verify / check
+the additional volume effects
