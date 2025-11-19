@@ -598,4 +598,8 @@ TODO: See the previous two tasks
 
 
 18.11.2025
-REDO: bypass5short
+REDO: bypass5short DONE
+
+
+19.11.2025
+Do the bypass5short_with filter, see what effect the filter has on the integrals
