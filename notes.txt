@@ -612,4 +612,22 @@ the additional volume effects
 Checked the test results from industrial testers. Coincides with my tests
 
 TODO: Try laser measurement (see if can get chem signal)
+	* IO the same, bypass=5, balance=5
+	dir example: bypass_5_b5fnvnrnoo
+	bypass_5 -> bypass=5 (0,5,1000: 0=closed, 1000=open)
+	b5 -> Balance=5 (0-7)
+	fn -> Flowmeter=no (yes/no)
+	vn -> Volume=no (yes/no)
+	rn -> filteR=no (yes/no)
+	oo -> Output=open (open/closed)
+
+DONE: Do the line that is written down in notebook 1420-1510 (offsets, decimal)
+For frequencies: 20(40), 40(80), 80(160) Hz.
+
 TODO: Change the cantilever, do bypass_5 w/ and w/o the filter
+
+Some troubles with stanford research systems filter. Turns out it was picking up original signal, so if this reoccurs,
+FIRST CHECK THE CABLES (MOVE THEM AROUND) !!!
+
+Does not seem like there was any meaningful signal in any of the 40, 80, 160 Hz (2nd harmonic) frequencies for oc chem
+spectral line measurement. Lets review tommorow!
