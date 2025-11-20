@@ -690,7 +690,7 @@ class CEPAS_noise_info():
 
     def __init__(self,
                  path: str,
-                 pressure: int | str | float='',
+                 pressure: int | str | float = '',
                  n: int | None = None):
         """
         Initiate the noise info. If there are multiple \
@@ -784,7 +784,7 @@ class CEPAS_SNR_bench():
         self.noise_path = noise_path
         self.noise_number = noise_number
         self.file_sig = file_sig
-    
+
     def change_file_sig(self, new_file_sig: str) -> None:
         """
         changes the `file_sig` if necessary
@@ -806,7 +806,8 @@ class CEPAS_SNR_bench():
     def make_bench(self,
                    pressure: int | str | float,
                    frequency: int | str | float,
-                   file_sig: str = 'gasx') -> CEPAS_benchmark: # type: ignore # noqa: F821
+                   file_sig: str = 'gasx') -> CEPAS_benchmark:  \
+            # type: ignore # noqa: F821
         """
         Create a `CEPAS_benchmark` object for the chemical spectra
         """
@@ -1056,7 +1057,7 @@ class CEPAS_SNR_bench():
             n=self.noise_number).get_noise_at(frequency=frequency)
 
     def get_all_snrs(self,
-                     
+
                      start: List[int | float],
                      end: List[int | float],
                      h: int = 2,
@@ -1164,8 +1165,8 @@ class CEPAS_SNR_bench():
             n_knots (int): for backend splines, adjust if necessary, default=10
             h (int): harmonic used
             signal_col (str): usually magnitude here
-            skip_single (bool): default false, toggle if there are no single point \
-                measurements
+            skip_single (bool): default false, toggle if there are no single \
+                point measurements
 
         Returns:
             (Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]): df based on \
@@ -1197,8 +1198,9 @@ class CEPAS_SNR_bench():
                     print(f"Replaced pressure in clean noise file \
                           name with empty string, {e}")
                 snr_c = signal[-1] / noise_c[1]
-                
-                # ensure variables are always defined to satisfy static analysis
+
+                # ensure variables are always defined \
+                # to satisfy static analysis
                 noise_s = None
                 snr_s = None
                 if not skip_single:
@@ -1215,13 +1217,15 @@ class CEPAS_SNR_bench():
 
                 if not skip_single:
                     for snr in [snr_s, snr_c]:
-                        snr_dict[p][f*h].append(float(snr.iloc[0]))  # type: ignore
+                        snr_dict[p][f*h].append(float(snr.iloc[0]))  \
+                            # type: ignore
                     for n in [noise_s, noise_c]:
                         noise_dict[p][f*h].append(float(n[1]))
                     signal_dict[p][f*h].append(signal[-1])
                 else:
                     for snr in [snr_c]:
-                        snr_dict[p][f*h].append(float(snr.iloc[0]))  # type: ignore
+                        snr_dict[p][f*h].append(
+                            float(snr.iloc[0]))  # type: ignore
                     for n in [noise_c]:
                         noise_dict[p][f*h].append(float(n[1]))
                     signal_dict[p][f*h].append(signal[-1])
