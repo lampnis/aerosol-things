@@ -631,3 +631,7 @@ FIRST CHECK THE CABLES (MOVE THEM AROUND) !!!
 
 Does not seem like there was any meaningful signal in any of the 40, 80, 160 Hz (2nd harmonic) frequencies for oc chem
 spectral line measurement. Lets review tommorow!
+
+
+21.11.2025
+Did the measurement for i0-4/o0-4, to check the chemical spectrum (continuation of whats above)
