@@ -635,3 +635,5 @@ spectral line measurement. Lets review tommorow!
 
 21.11.2025
 Did the measurement for i0-4/o0-4, to check the chemical spectrum (continuation of whats above)
+TODO on monday: Block the output side of bypass and bypass itself for the test to see if the filter can reduce noise
+for say input opening at n=3 and n=4. If yes, will make another filter for bypass/-output side.
