@@ -553,6 +553,7 @@ class CEPAS_benchmark():
         """
         for s in self.spectra.spectra_list:
             s["magnitude_pnorm"] = np.sqrt(s["H2_pnorm"]**2 + s["H3_pnorm"]**2)
+            s["magnitude"] = np.sqrt(s["H2"]**2 + s["H3"]**2)
 
     def get_avg(self) -> pd.DataFrame:
         """
