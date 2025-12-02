@@ -971,3 +971,142 @@ positive, as it should. Not sure, what was the issue. Omron flowmeter shows +0.0
 * TODO: Think of flowmeter placements and the piping setup
 ```
 </details>
+
+## 2025-11-13
+
+**Summary:** The system was adjusted for a flow rate of 0.1 l/min with a closed bypass. The input and output bypass settings were 5 and 4 respectively, and the 2nd needle valve was set to `n=1` turns. Noise measurements were planned for fully opened bypass sides and balance valve 7-0 (7 already done). The time trace looked problematic.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+        ==>2==>
+       1   _   3
+       ^---|---_
+I==FM=>|  CELL |=PUMP=>O
+       |_______|
+
+* PUMP=50W
+* Adjusted flow (with closed bypass) to be 0.1 l/min (with bypass disconnected)
+* I=5, O=4
+* 2 must be adjusted to n=1
+!!! Currently time trace looks >> 1
+TODO: Finish the measurements of noise for fully opened bypass sides and balance valve 7-0. 7 already done.
+I, O = 5, 4 (like mentioned above!) DONE
+```
+</details>
+
+## 2025-11-14
+
+**Summary:** The task was to measure noise integrals in the 0-30 Hz and 40-65 Hz ranges, specifically with the middle flowmeter removed.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+TODO: Integrals of noise: 0-30 and 40-65 Hz range. Do the measurements with removed middle Flowmeter.
+```
+</details>
+
+## 2025-11-17
+
+**Summary:** Changes were made to the `CEPAS_SNR_bench.make_bench()` method in `my_utils/classes.py` to fix filename convention issues (`'gasx'/'single'`). The previous two tasks were marked as needing review.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+DONE: in `my_utils/classes.py` did some changes for `CEPAS_SNR_bench.make_bench()` method, caught the error where problems
+with the filename were ('gasx'/'single' filename conventions...)
+TODO: See the previous two tasks
+```
+</details>
+
+## 2025-11-18
+
+**Summary:** The `bypass5short` measurement was redone.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+REDO: bypass5short DONE
+```
+</details>
+
+## 2025-11-19
+
+**Summary:** Tests were conducted with a "big filter" and with an additional 7ml volume added to the cell side (matching the balance volume). These tests included verifying the additional volume effects both with and without the closed output side of the cell.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+DONE: test with bigfilter
+DONE: test with additional volume to Cell side (7 ml cell ~ 7 ml balance)
+DONE: w/ and w/o the closed output side of the cell, to verify / check
+the additional volume effects
+```
+</details>
+
+## 2025-11-20
+
+**Summary:** The test results from industrial testers were checked and found to coincide with internal tests. The next steps involve attempting laser measurements to check for a chemical signal with specific bypass and balance settings (I/O the same, bypass=5, balance=5). Filename convention example provided. A frequency sweep for the line (1420-1510 offsets, decimal) was performed at 20(40), 40(80), and 80(160) Hz. The cantilever needs to be changed for further tests with bypass_5, with and without the filter. Troubles with the Stanford Research Systems filter picking up the original signal were noted, with a reminder to check cables if this reoccurs. No meaningful chemical signal was detected at the tested frequencies.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+Checked the test results from industrial testers. Coincides with my tests
+
+TODO: Try laser measurement (see if can get chem signal)
+	* IO the same, bypass=5, balance=5
+	dir example: bypass_5_b5fnvnrnoo
+	bypass_5 -> bypass=5 (0,5,1000: 0=closed, 1000=open)
+	b5 -> Balance=5 (0-7)
+	fn -> Flowmeter=no (yes/no)
+	vn -> Volume=no (yes/no)
+	rn -> filteR=no (yes/no)
+	oo -> Output=open (open/closed)
+
+DONE: Do the line that is written down in notebook 1420-1510 (offsets, decimal)
+For frequencies: 20(40), 40(80), 80(160) Hz.
+
+TODO: Change the cantilever, do bypass_5 w/ and w/o the filter
+
+Some troubles with stanford research systems filter. Turns out it was picking up original signal, so if this reoccurs,
+FIRST CHECK THE CABLES (MOVE THEM AROUND) !!!
+
+Does not seem like there was any meaningful signal in any of the 40, 80, 160 Hz (2nd harmonic) frequencies for oc chem
+spectral line measurement. Lets review tommorow!
+```
+</details>
+
+## 2025-11-21
+
+**Summary:** Measurements were performed for i0-4/o0-4 to check the chemical spectrum (continuation of the previous day's work). The output side of the bypass and the bypass itself were blocked to test if the filter could reduce noise for input openings at n=3 and n=4. If successful, another filter would be made for the bypass/output side.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+Did the measurement for i0-4/o0-4, to check the chemical spectrum (continuation of whats above)
+DONE on monday: Block the output side of bypass and bypass itself for the test to see if the filter can reduce noise
+for say input opening at n=3 and n=4. If yes, will make another filter for bypass/-output side.
+```
+</details>
+
+## 2025-12-02
+
+**Summary:** Three more measurements are needed for the single-side filter setup with 6mm tubing. After these are complete, testing will begin on a double-filter setup (both sides) with 3mm tubing on the output side.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+TODO:
+Need to make still 3 measurements for single side filter setup with 6 mm tubing and
+then start testing the setup with double filter (both sides) setup. On output side
+everythin is with 3 mm tubing.
+```
+</details>
