@@ -54,6 +54,31 @@ def hello_test():
     print("Hello!")
 
 
+def external_master(filename: str, root_above: int = 1) -> bool:
+    """
+    Creates/edits the specified file, `n` levels above directory \
+        from where called
+
+    Args:
+        filename (str): name of the file
+        root_above (int): how many levels above pwd (default=1)
+
+    Returns:
+        (str | int): 0 if no errors, 1 if error, `str` for testing
+    """
+    path = root_above * "../"
+    file_exists = os.system(f"ls {path} | grep -q {filename}") != 256
+
+    if not file_exists:
+        create_file = input("Create file? (y/n)\n")
+        if create_file == "y":
+            os.system(f"touch {path}{filename}")
+        elif create_file == "n":
+            
+
+    return file_exists
+
+
 def integrate_range_of(df: pd.DataFrame,
                        s: int | float,
                        f: int | float,
