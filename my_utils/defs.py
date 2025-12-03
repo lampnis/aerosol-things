@@ -74,7 +74,7 @@ def external_master(filename: str, root_above: int = 1) -> bool:
         if create_file == "y":
             os.system(f"touch {path}{filename}")
         elif create_file == "n":
-            
+            print("Did not create the file")
 
     return file_exists
 
