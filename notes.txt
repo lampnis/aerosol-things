@@ -643,4 +643,7 @@ for say input opening at n=3 and n=4. If yes, will make another filter for bypas
 TODO:
 Need to make still 3 measurements for single side filter setup with 6 mm tubing and
 then start testing the setup with double filter (both sides) setup. On output side
-everythin is with 3 mm tubing.
+everything is with 3 mm tubing.
+
+03.12.2025
+See above. Will just make initial acoustic noise spectra DONE
