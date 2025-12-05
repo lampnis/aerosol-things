@@ -307,30 +307,36 @@ def dir_match_dict(path: str,
 
 def create_regex_strings(list1: List[int],
                          list2: List[int],
+                         list3: List[int | str] = [12, 24, 32],
                          f: str = "gasx") -> \
                             Dict[int | str | float,
                                  Dict[int | str | float,
                                       Pattern[str]]]:
     """
-    Runs a nested for loop to mach each `list1` item with each
-    `list2` item in an appropriate raw string to use with regex
+    Runs a nested for loop to match each `list1` item with each
+    `list2` item in an appropriate raw string to use with regex.
 
     Args:
         list1 (List[int]): List, e.g. of pressures
         list2 (List[int]): List, e.g. of frequencies
+        list3 (List[int | str]): List, e.g. of amplitudes \
+            (default=[12, 24, 32])
         f (str): name flag, default "gasx"
 
     Returns:
-        List[str]: The generated list of strings, to use wherever
+        Dict[...]: The generated dictionary of regex patterns.
     """
     patterns: Dict[int | str | float,
                    Dict[int | str | float,
                         Pattern[str]]] = {}
+
+    # Create a regex string from list3, e.g. (item1|item2|...)
+    list3_str = "|".join(map(str, list3))
     for l1 in list1:
         patterns[l1] = {}
         for l2 in list2:
             current_string = re.compile(
-                f"{f}_{l1}_(12|24|32)_{l2}__msr__[0-9]{{1,2}}"
+                f"{f}_{l1}_({list3_str})_{l2}__msr__[0-9]{{1,2}}"
                 )
             patterns[l1][l2] = current_string
     return patterns
