@@ -1,0 +1,1 @@
+Double sided filter. Spectral sweep + frequency response in range(40, 200, 20)

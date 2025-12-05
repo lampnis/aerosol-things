@@ -640,10 +640,22 @@ for say input opening at n=3 and n=4. If yes, will make another filter for bypas
 
 
 02.12.2025
-TODO:
+DONE:
 Need to make still 3 measurements for single side filter setup with 6 mm tubing and
 then start testing the setup with double filter (both sides) setup. On output side
 everything is with 3 mm tubing.
 
+
 03.12.2025
 See above. Will just make initial acoustic noise spectra DONE
+
+
+05.12.2025
+DONE: Make spectral scans with the double filter setup. Then check also the output side filter alone.
+Think of attaching the 'loose parts'
+Think of reducing the length of bypass side (reduce piping length)
+Think of attaching to the balance volume with the hard L connection
+DONE: for openings n=3 and n=4 (i/o cell) did the freq sweep. Signal follows the trend visible in the noise measurements.
+DIDNOT: not yet measured the n=0, even though that is not the most important currently
+
+TODO:!!! Do the n=0 i/o with double filters. Then do freq sweep for both filters separately
