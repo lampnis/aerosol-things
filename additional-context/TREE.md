@@ -13,7 +13,6 @@ opjs
 package-lock.json
 stats_useful.ipynb
 ted200c_thermistor.ipynb
-tox.ini
 
 /home/labuser/aerosol-things/additional-context:
 SESSIONS.md
@@ -36,7 +35,7 @@ freq_tests
 full_tests
 misc_tests
 noise_tests
-oc_tests
+oc-tests
 point_tests
 
 /home/labuser/aerosol-things/codes/datas/22deg:
@@ -980,11 +979,11 @@ spectrum_21082025_0_x10
 spectrum_21082025_0_x10_84Hz
 spectrum_21082025_0_x10_84Hz_gasx_RH35
 
-/home/labuser/aerosol-things/codes/datas/oc_tests:
-bypass_balance_tests
-laser_tests
+/home/labuser/aerosol-things/codes/datas/oc-tests:
+bypass-balance-tests
+laser-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests:
 README.md
 bypass_0
 bypass_1000
@@ -997,7 +996,7 @@ bypass_5_short_volume
 bypass_5_short_volumeOclosed
 nb.ipynb
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_0:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_0:
 spectrum_oc_open_0.txt
 spectrum_oc_open_1.txt
 spectrum_oc_open_2.txt
@@ -1007,7 +1006,7 @@ spectrum_oc_open_5.txt
 spectrum_oc_open_6.txt
 spectrum_oc_open_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_1000:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_1000:
 spectrum_oc_openf_0.txt
 spectrum_oc_openf_1.txt
 spectrum_oc_openf_2.txt
@@ -1017,7 +1016,7 @@ spectrum_oc_openf_5.txt
 spectrum_oc_openf_6.txt
 spectrum_oc_openf_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_5:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_5:
 spectrum_oc_open5_0.txt
 spectrum_oc_open5_1.txt
 spectrum_oc_open5_2.txt
@@ -1027,7 +1026,7 @@ spectrum_oc_open5_5.txt
 spectrum_oc_open5_6.txt
 spectrum_oc_open5_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_5_short:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_5_short:
 spectrum_oc_open5_0.txt
 spectrum_oc_open5_1.txt
 spectrum_oc_open5_2.txt
@@ -1037,7 +1036,7 @@ spectrum_oc_open5_5.txt
 spectrum_oc_open5_6.txt
 spectrum_oc_open5_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_5_short_Oclosed:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_5_short_Oclosed:
 spectrum_oc_open5_0.txt
 spectrum_oc_open5_1.txt
 spectrum_oc_open5_2.txt
@@ -1047,7 +1046,7 @@ spectrum_oc_open5_5.txt
 spectrum_oc_open5_6.txt
 spectrum_oc_open5_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_5_short_bigfilter:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_5_short_bigfilter:
 spectrum_oc_open5_0.txt
 spectrum_oc_open5_1.txt
 spectrum_oc_open5_2.txt
@@ -1057,7 +1056,7 @@ spectrum_oc_open5_5.txt
 spectrum_oc_open5_6.txt
 spectrum_oc_open5_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_5_short_redo:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_5_short_redo:
 spectrum_oc_open5_0.txt
 spectrum_oc_open5_1.txt
 spectrum_oc_open5_2.txt
@@ -1067,7 +1066,7 @@ spectrum_oc_open5_5.txt
 spectrum_oc_open5_6.txt
 spectrum_oc_open5_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_5_short_volume:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_5_short_volume:
 spectrum_oc_open5_0.txt
 spectrum_oc_open5_1.txt
 spectrum_oc_open5_2.txt
@@ -1077,7 +1076,7 @@ spectrum_oc_open5_5.txt
 spectrum_oc_open5_6.txt
 spectrum_oc_open5_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/bypass_balance_tests/bypass_5_short_volumeOclosed:
+/home/labuser/aerosol-things/codes/datas/oc-tests/bypass-balance-tests/bypass_5_short_volumeOclosed:
 spectrum_oc_open5_0.txt
 spectrum_oc_open5_1.txt
 spectrum_oc_open5_2.txt
@@ -1087,11 +1086,12 @@ spectrum_oc_open5_5.txt
 spectrum_oc_open5_6.txt
 spectrum_oc_open5_7.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests:
 1
 2
+3
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1:
 README.md
 bypass-5-b5fnvnrni0o0
 bypass-5-b5fnvnrni1o1
@@ -1101,92 +1101,189 @@ bypass-5-b5fnvnrni4o4
 bypass-5-b5fnvnrni5o4
 nb.ipynb
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni0o0:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni0o0:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni0o0/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni0o0/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni1o1:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni1o1:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni1o1/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni1o1/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni2o2:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni2o2:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni2o2/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni2o2/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni3o3:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni3o3:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni3o3/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni3o3/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni4o4:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni4o4:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni4o4/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni4o4/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni5o4:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni5o4:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/1/bypass-5-b5fnvnrni5o4/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/1/bypass-5-b5fnvnrni5o4/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/2:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/2:
 README.md
 bypass-5-b5fnvnryi0o0
 bypass-5-b5fnvnryi3o0
 bypass-5-b5fnvnryi4o0
 nb.ipynb
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/2/bypass-5-b5fnvnryi0o0:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/2/bypass-5-b5fnvnryi0o0:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/2/bypass-5-b5fnvnryi0o0/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/2/bypass-5-b5fnvnryi0o0/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/2/bypass-5-b5fnvnryi3o0:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/2/bypass-5-b5fnvnryi3o0:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/2/bypass-5-b5fnvnryi3o0/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/2/bypass-5-b5fnvnryi3o0/noise-tests:
 Spectrum.txt
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/2/bypass-5-b5fnvnryi4o0:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/2/bypass-5-b5fnvnryi4o0:
 gasx_900_32_20__msr__0
 gasx_900_32_40__msr__1
 gasx_900_32_80__msr__2
 noise-tests
 
-/home/labuser/aerosol-things/codes/datas/oc_tests/laser_tests/2/bypass-5-b5fnvnryi4o0/noise-tests:
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/2/bypass-5-b5fnvnryi4o0/noise-tests:
+Spectrum.txt
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3:
+README.md
+bypass-5-b5fnvnryi0o0
+bypass-5-b5fnvnryi0o4
+bypass-5-b5fnvnryi3o3
+bypass-5-b5fnvnryi4o4
+nb.ipynb
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi0o0:
+README.md
+gasx_900_32_100__msr__8
+gasx_900_32_110__msr__9
+gasx_900_32_120__msr__10
+gasx_900_32_130__msr__11
+gasx_900_32_140__msr__12
+gasx_900_32_150__msr__13
+gasx_900_32_160__msr__14
+gasx_900_32_170__msr__15
+gasx_900_32_180__msr__16
+gasx_900_32_190__msr__17
+gasx_900_32_20__msr__0
+gasx_900_32_30__msr__1
+gasx_900_32_40__msr__2
+gasx_900_32_50__msr__3
+gasx_900_32_60__msr__4
+gasx_900_32_70__msr__5
+gasx_900_32_80__msr__6
+gasx_900_32_90__msr__7
+noise-tests
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi0o0/noise-tests:
+Spectrum.txt
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi0o4:
+README.md
+gasx_900_32_100__msr__8
+gasx_900_32_110__msr__9
+gasx_900_32_120__msr__10
+gasx_900_32_130__msr__11
+gasx_900_32_140__msr__12
+gasx_900_32_150__msr__13
+gasx_900_32_160__msr__14
+gasx_900_32_170__msr__15
+gasx_900_32_180__msr__16
+gasx_900_32_190__msr__17
+gasx_900_32_20__msr__0
+gasx_900_32_30__msr__1
+gasx_900_32_40__msr__2
+gasx_900_32_50__msr__3
+gasx_900_32_60__msr__4
+gasx_900_32_70__msr__5
+gasx_900_32_80__msr__6
+gasx_900_32_90__msr__7
+noise-tests
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi0o4/noise-tests:
+Spectrum.txt
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi3o3:
+gasx_900_32_100__msr__8
+gasx_900_32_20__msr__0
+gasx_900_32_30__msr__1
+gasx_900_32_40__msr__2
+gasx_900_32_50__msr__3
+gasx_900_32_60__msr__4
+gasx_900_32_70__msr__5
+gasx_900_32_80__msr__6
+gasx_900_32_90__msr__7
+noise-tests
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi3o3/noise-tests:
+Spectrum.txt
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi4o4:
+gasx_900_32_100__msr__8
+gasx_900_32_110__msr__9
+gasx_900_32_120__msr__10
+gasx_900_32_130__msr__11
+gasx_900_32_140__msr__12
+gasx_900_32_150__msr__13
+gasx_900_32_160__msr__14
+gasx_900_32_170__msr__15
+gasx_900_32_180__msr__16
+gasx_900_32_190__msr__17
+gasx_900_32_20__msr__0
+gasx_900_32_30__msr__1
+gasx_900_32_40__msr__2
+gasx_900_32_50__msr__3
+gasx_900_32_60__msr__4
+gasx_900_32_70__msr__5
+gasx_900_32_80__msr__6
+gasx_900_32_90__msr__7
+noise-tests
+
+/home/labuser/aerosol-things/codes/datas/oc-tests/laser-tests/3/bypass-5-b5fnvnryi4o4/noise-tests:
 Spectrum.txt
 
 /home/labuser/aerosol-things/codes/datas/point_tests:
@@ -1214,6 +1311,9 @@ common.cpython-313.pyc
 defs.cpython-313.pyc
 
 /home/labuser/aerosol-things/opjs:
+GasX_ON_OFF_single.opju
+cell_leak_effect_1h.opju
 first_tests.opju
 noise_compare.opju
 oc_cell.opju
+pressure_tests_cut_tube.opju

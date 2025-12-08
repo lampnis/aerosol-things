@@ -1110,3 +1110,36 @@ then start testing the setup with double filter (both sides) setup. On output si
 everythin is with 3 mm tubing.
 ```
 </details>
+
+## 2025-12-03
+
+**Summary:** Will just make initial acoustic noise spectra.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+03.12.2025
+See above. Will just make initial acoustic noise spectra DONE
+```
+</details>
+
+## 2025-12-05
+
+**Summary:** Spectral scans with the double filter setup were completed, and the output side filter alone was checked. Considerations were made for attaching loose parts, reducing bypass side piping length, and attaching to the balance volume with a hard L connection. Frequency sweeps for openings n=3 and n=4 (i/o cell) showed that the signal follows the trend visible in noise measurements. The n=0 i/o measurements with double filters and a frequency sweep for the output side filter still need to be done.
+
+<details>
+<summary>Original Notes</summary>
+
+```
+05.12.2025
+DONE: Make spectral scans with the double filter setup. Then check also the output side filter alone.
+Think of attaching the 'loose parts'
+Think of reducing the length of bypass side (reduce piping length)
+Think of attaching to the balance volume with the hard L connection
+DONE: for openings n=3 and n=4 (i/o cell) did the freq sweep. Signal follows the trend visible in the noise measurements.
+DIDNOT: not yet measured the n=0, even though that is not the most important currently
+
+DONE:!!! Do the n=0 i/o with double filters. Then do freq sweep for output side filter!
+```
+</details>

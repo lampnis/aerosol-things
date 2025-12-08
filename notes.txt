@@ -658,4 +658,4 @@ Think of attaching to the balance volume with the hard L connection
 DONE: for openings n=3 and n=4 (i/o cell) did the freq sweep. Signal follows the trend visible in the noise measurements.
 DIDNOT: not yet measured the n=0, even though that is not the most important currently
 
-TODO:!!! Do the n=0 i/o with double filters. Then do freq sweep for both filters separately
+DONE:!!! Do the n=0 i/o with double filters. Then do freq sweep for output side filter!
