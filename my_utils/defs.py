@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.path as mpath
 from matplotlib import axes
+from IPython.display import display, HTML
 
 # scipy
 from scipy.special import voigt_profile
@@ -49,6 +50,40 @@ col_names = {
 
 
 # --------------------- SEPARATE DEFINITIONS -------------------------
+
+def fix_dark_theme():
+    """
+    Injects CSS to force Jupyter widget backgrounds to be transparent.
+    Call this once at the start of your notebook.
+    """
+    css = """
+    <style>
+    .cell-output-ipywidget-background {
+       background-color: transparent !important;
+    }
+    .jp-OutputArea-output {
+       background-color: transparent;
+    }
+    .jupyter-matplotlib-header {
+        color: var(--vscode-editor-foreground);
+        background-color: transparent;
+    }
+    .mpl-message {
+        color: white !important;
+        font-size: 12px; /* Optional: Make them readable */
+    }
+    .jupyter-matplotlib-button {
+        color: var(--vscode-editor-foreground) !important;
+        background-color: var(--vscode-editor-background);
+    }
+    .jupyter-matplotlib-footer {
+        color: var(--vscode-editor-foreground) !important;
+        background-color: var(--vscode-editor-background);
+    }
+    </style>
+    """
+    display(HTML(css))
+
 
 def hello_test():
     print("Hello!")
