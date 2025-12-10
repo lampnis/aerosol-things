@@ -617,7 +617,7 @@ TODO: Try laser measurement (see if can get chem signal)
 	bypass_5 -> bypass=5 (0,5,1000: 0=closed, 1000=open)
 	b5 -> Balance=5 (0-7)
 	fn -> Flowmeter=no (yes/no)
-	vn -> Volume=no (yes/no)
+	vn -> Volume=no (yes/no/short)
 	rn -> filteR=no (yes/no)
 	oo -> Output=open (open/closed)
 
@@ -664,4 +664,5 @@ DONE:!!! Do the n=0 i/o with double filters. Then do freq sweep for output side 
 10.12.2025
 TODO: Shorten the path "filter-Tpiece-cell", see results with io=4
 TODO: add printed small filters (try different positions)
+TODO: Find data from current presentations and add to the Project folder together with the presentations
 Think: See above think points
